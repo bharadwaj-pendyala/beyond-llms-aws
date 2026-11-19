@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<!-- Bootstrap Icons: https://github.com/twbs/icons
+The MIT License (MIT)
+
+Copyright (c) 2019-2024 The Bootstrap Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Beyond LLMs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>/* ============================================================
+   Beyond LLMs: decision models for smarter AI agents, talk deck
+   A hand-rolled, dependency-free slide engine.
+   Design system: dark surface, one blue accent, orange = danger.
+   Palette values validated with the dataviz palette validator.
+   ============================================================ */
+
+:root {
+  /* surfaces */
+  --page:        #0d0d0d;   /* page plane */
+  --surface:     #1a1a19;   /* card / chart surface */
+  --surface-2:   #232322;
+  --hairline:    rgba(255,255,255,0.10);
+  --hairline-2:  rgba(255,255,255,0.06);
+
+  /* ink */
+  --ink:         #ffffff;
+  --ink-2:       #c3c2b7;   /* secondary */
+  --ink-3:       #898781;   /* muted */
+
+  /* accents (validated dark-mode categorical slots) */
+  --blue:        #3987e5;   /* primary accent */
+  --blue-soft:   rgba(57,135,229,0.14);
+  --orange:      #d95926;   /* danger / failure */
+  --orange-soft: rgba(217,89,38,0.14);
+  --aqua:        #199e70;   /* success / verify */
+  --yellow:      #c98500;
+  --violet:      #9085e9;
+  --good:        #0ca30c;
+  --critical:    #d03b3b;
+
+  /* type */
+  --sans: "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Terminal and code treatments retain their monospace face. */
+  --mono: "JetBrains Mono", "SF Mono", ui-monospace, "Cascadia Code", monospace;
+  --type-display: clamp(3.5rem, 6.5vw, 6rem);
+  --type-heading: clamp(2.4rem, 4.25vw, 4rem);
+  --type-body: clamp(1.1rem, 1.7vw, 1.5rem);
+  --type-detail: clamp(0.95rem, 1.25vw, 1.15rem);
+
+  /* rhythm */
+  --pad: clamp(2.5rem, 6vw, 6rem);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+  overflow: hidden;
+}
+
+/* ---------- deck / slide layout ---------- */
+
+.deck { position: fixed; inset: 0; }
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--pad);
+  opacity: 0;
+  overflow: hidden;
+}
+
+.slide.active {
+  display: flex;
+  animation: slideIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(22px) scale(0.995); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* stagger children in */
+.slide.active .reveal {
+  opacity: 0;
+  animation: rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.slide.active .reveal:nth-child(1) { animation-delay: 0.10s; }
+.slide.active .reveal:nth-child(2) { animation-delay: 0.20s; }
+.slide.active .reveal:nth-child(3) { animation-delay: 0.30s; }
+.slide.active .reveal:nth-child(4) { animation-delay: 0.40s; }
+.slide.active .reveal:nth-child(5) { animation-delay: 0.50s; }
+.slide.active .reveal:nth-child(6) { animation-delay: 0.60s; }
+.slide.active .reveal:nth-child(7) { animation-delay: 0.70s; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- typography ---------- */
+
+.eyebrow {
+  font-size: var(--type-detail);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 1.4rem;
+}
+.eyebrow.danger { color: var(--orange); }
+.eyebrow.ok { color: var(--aqua); }
+
+h1 {
+  font-size: var(--type-display);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+h2 {
+  font-size: var(--type-heading);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+h3 {
+  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+p, li { font-size: var(--type-body); line-height: 1.5; color: var(--ink-2); text-wrap: pretty; }
+.lead { font-size: clamp(1.25rem, 2vw, 1.8rem); color: var(--ink-2); max-width: 24ch; }
+
+.accent { color: var(--blue); }
+.danger { color: var(--orange); }
+.ok { color: var(--aqua); }
+.muted { color: var(--ink-3); }
+.nowrap { white-space: nowrap; }
+
+/* big statement slides */
+.statement { justify-content: center; }
+.statement h1 {
+  font-size: var(--type-display);
+  max-width: 18ch;
+}
+.statement .sub { margin-top: 2rem; font-size: clamp(1.15rem, 1.8vw, 1.6rem); color: var(--ink-3); max-width: 40ch; }
+
+/* ---------- lists ---------- */
+
+ul.clean { list-style: none; display: flex; flex-direction: column; gap: 1.15rem; margin-top: 2.2rem; max-width: 46ch; }
+/* marker hangs outside the text block so <strong> stays inline and
+   wrapped lines align under the first word, not under the flex item */
+ul.clean li { position: relative; padding-left: 1.9rem; }
+ul.clean li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.7rem; height: 0.7rem;
+  border-radius: 3px;
+  background: var(--blue);
+  box-shadow: 0 0 0 4px var(--blue-soft);
+}
+ul.clean.danger li::before { background: var(--orange); box-shadow: 0 0 0 4px var(--orange-soft); }
+
+/* ---------- cards / grids ---------- */
+
+.grid { display: grid; gap: 1.2rem; margin-top: 2.4rem; }
+.grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  padding: 1.6rem 1.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.card .k { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); }
+.card .k.danger { color: var(--orange); }
+.card .k.ok { color: var(--aqua); }
+.card h3 { color: var(--ink); }
+.card p { font-size: var(--type-detail); color: var(--ink-2); }
+
+/* stat tiles */
+.stat { align-items: flex-start; }
+.stat .num {
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
+  font-weight: 820;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.stat .num.blue { color: var(--blue); }
+.stat .num.orange { color: var(--orange); }
+.stat .num.aqua { color: var(--aqua); }
+.stat .lbl { color: var(--ink-2); font-size: clamp(0.9rem, 1.2vw, 1.1rem); margin-top: 0.4rem; }
+
+/* ---------- layout helpers ---------- */
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; height: 100%; }
+.split.narrow-left { grid-template-columns: 0.85fr 1.15fr; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  font-size: 0.85rem; font-weight: 600; color: var(--ink-2);
+  background: var(--surface);
+}
+.chip .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--blue); }
+
+/* contact: bio slide list + closing-slide strip */
+.contact { list-style: none; margin-top: 1.4rem; display: flex; flex-direction: column; gap: 0.55rem; }
+.contact li { display: flex; align-items: baseline; gap: 0.9rem; font-size: clamp(0.9rem, 1.2vw, 1.1rem); }
+.contact .c-k {
+  flex: 0 0 5.5rem;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+.contact a { font-family: var(--mono); }
+
+.contact-strip { margin-top: 1.6rem; display: flex; flex-wrap: wrap; gap: 0.7rem; }
+.contact-strip .chip { font-weight: 500; }
+
+.slide a { color: var(--blue); text-decoration: none; border-bottom: 1px solid var(--blue-soft); }
+.slide a:hover { border-bottom-color: var(--blue); }
+
+/* pull quote */
+.pull { max-width: 24ch; }
+.pull .mark { color: var(--blue); font-size: 4rem; line-height: 0.4; font-weight: 800; display: block; margin-bottom: 0.4rem; }
+.pull h2 { font-weight: 600; letter-spacing: -0.01em; }
+.pull .cite { margin-top: 1.6rem; color: var(--ink-3); font-size: 1rem; font-weight: 600; letter-spacing: 0.02em; }
+
+/* flow / pipeline diagram */
+.flow { display: flex; align-items: stretch; gap: 0; margin-top: 2.6rem; flex-wrap: wrap; }
+.flow .node {
+  flex: 1 1 0; min-width: 140px;
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: 14px; padding: 1.2rem 1rem; text-align: center;
+  display: flex; flex-direction: column; gap: 0.35rem; justify-content: center;
+}
+.flow .node .n-k { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+.flow .node .n-t { font-weight: 700; color: var(--ink); font-size: 1.05rem; }
+.flow .arrow { display: flex; align-items: center; color: var(--blue); font-size: 1.4rem; padding: 0 0.6rem; }
+
+/* loop badge */
+.loop-band { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 2.4rem; }
+.loop-band .pill {
+  padding: 0.7rem 1.2rem; border-radius: 999px;
+  border: 1px solid var(--hairline); background: var(--surface);
+  font-weight: 700; color: var(--ink); font-size: 1.05rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.loop-band .pill .idx { color: var(--blue); font-variant-numeric: tabular-nums; }
+
+/* ---------- chart ---------- */
+.chart-wrap { margin-top: 1.5rem; width: 100%; }
+.chart-legend { display: flex; gap: 1.6rem; margin-top: 1rem; flex-wrap: wrap; }
+.chart-legend .item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: var(--ink-2); font-weight: 600; }
+.chart-legend .swatch { width: 1.1rem; height: 0.28rem; border-radius: 2px; }
+
+/* ---------- chrome (progress, footer, nav) ---------- */
+
+.progress {
+  position: fixed; top: 0; left: 0; height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--aqua));
+  width: 0; z-index: 50; transition: width 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+
+.footer {
+  position: fixed; bottom: 1.5rem; left: var(--pad); right: var(--pad);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.8rem; color: var(--ink-3); z-index: 40;
+  letter-spacing: 0.04em;
+}
+.footer .brand { font-weight: 700; color: var(--ink-2); }
+.footer .brand .sq { display: inline-block; width: 0.55rem; height: 0.55rem; background: var(--blue); border-radius: 2px; margin-right: 0.5rem; vertical-align: middle; }
+.footer .count { font-variant-numeric: tabular-nums; }
+
+.hint {
+  position: fixed; bottom: 1.4rem; left: 50%; transform: translateX(-50%);
+  font-size: 0.75rem; color: var(--ink-3); z-index: 40; opacity: 0.7;
+  transition: opacity 0.5s; letter-spacing: 0.05em;
+}
+.hint.hidden { opacity: 0; }
+.hint kbd {
+  font-family: var(--mono); background: var(--surface-2); border: 1px solid var(--hairline);
+  border-radius: 5px; padding: 0.1rem 0.4rem; font-size: 0.72rem; color: var(--ink-2);
+}
+
+/* speaker notes overlay */
+.notes {
+  position: fixed; right: 1.5rem; bottom: 3.5rem; width: min(420px, 40vw);
+  max-height: 45vh; overflow: auto;
+  background: rgba(20,20,19,0.97); border: 1px solid var(--hairline);
+  border-radius: 14px; padding: 1.2rem 1.4rem; z-index: 60;
+  display: none; backdrop-filter: blur(8px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.notes.show { display: block; }
+.notes .nh { font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 0.6rem; font-weight: 700; }
+.notes p { font-size: 0.95rem; line-height: 1.5; color: var(--ink-2); }
+
+/* ambient background glow */
+.glow {
+  position: fixed; pointer-events: none; z-index: 0;
+  width: 60vw; height: 60vw; border-radius: 50%;
+  filter: blur(120px); opacity: 0.16;
+}
+.glow.a { top: -20vw; right: -10vw; background: var(--blue); }
+.glow.b { bottom: -25vw; left: -15vw; background: var(--violet); }
+
+.slide > * { position: relative; z-index: 1; }
+
+/* number / kicker in corner */
+.kicker {
+  position: absolute; top: var(--pad); left: var(--pad);
+  font-family: var(--mono); font-size: 0.85rem; color: var(--ink-3);
+  letter-spacing: 0.1em;
+}
+
+/* code-ish inline */
+code, .mono { font-family: var(--mono); font-size: 0.92em; color: var(--aqua); background: rgba(25,158,112,0.10); padding: 0.1rem 0.4rem; border-radius: 5px; }
+
+/* ---------- annotated code block (demo section) ----------
+   A readable-from-the-back-row snippet: filename tab, big mono lines,
+   dimmed inline annotations. Deliberately NOT syntax-rainbow — one ink
+   for code, one muted ink for the human note, one accent for the point. */
+.codeblock {
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: 14px; overflow: hidden; margin-top: 1.6rem;
+}
+.codeblock .cb-head {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.7rem 1.1rem; border-bottom: 1px solid var(--hairline-2);
+  background: var(--surface-2);
+  font-family: var(--mono); font-size: 0.85rem; color: var(--ink-3); letter-spacing: 0.02em;
+}
+.codeblock .cb-head .fname { color: var(--ink-2); font-weight: 600; }
+.codeblock .cb-head .tag {
+  margin-left: auto; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+  font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px;
+  border: 1px solid var(--hairline); color: var(--ink-3);
+}
+.codeblock .cb-head .tag.ok { color: var(--aqua); border-color: rgba(25,158,112,0.4); }
+.codeblock .cb-head .tag.danger { color: var(--orange); border-color: rgba(217,89,38,0.4); }
+.codeblock pre {
+  margin: 0; padding: 1.1rem 1.3rem;
+  font-family: var(--mono);
+  font-size: clamp(0.9rem, 1.35vw, 1.2rem); line-height: 1.75;
+  color: var(--ink); overflow: hidden; white-space: pre-wrap; word-break: break-word;
+}
+.codeblock pre .cm { color: var(--ink-3); }          /* dimmed code comment */
+.codeblock pre .an { color: var(--blue); font-style: normal; }  /* the point we annotate */
+.codeblock pre .kw { color: var(--violet); }         /* keyword-ish */
+.codeblock pre .str { color: var(--aqua); }          /* string / value */
+.codeblock pre .bad { color: var(--orange); }        /* the blocked / denied token */
+
+/* the callout line under a snippet — the one sentence to remember */
+.cb-take { margin-top: 1.4rem; font-size: clamp(1.05rem, 1.6vw, 1.4rem); color: var(--ink); max-width: 52ch; }
+
+/* two stacked snippets (config that registers → script that runs) */
+.codeblock + .codeblock { margin-top: 0.7rem; }
+.cb-rel {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin: 0.55rem 0 0.15rem; padding-left: 0.2rem;
+  font-family: var(--mono); font-size: 0.75rem; color: var(--ink-3); letter-spacing: 0.04em;
+}
+.cb-rel .arr { color: var(--blue); }
+
+/* responsive */
+@media (max-width: 900px) {
+  /* content that fits a projector overflows a phone. let the slide scroll
+     instead of silently cutting the bottom off; touch nav is a swipe, so a
+     vertical scroll does not collide with it. */
+  .slide { overflow-y: auto; justify-content: flex-start; padding-block: 2rem; }
+  .split, .split.narrow-left { grid-template-columns: 1fr; gap: 1.5rem; }
+  .grid.cols-3, .grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+  .qr-grid { grid-template-columns: 1fr; }
+  .flow { flex-direction: column; }
+  .flow .arrow { transform: rotate(90deg); padding: 0.3rem 0; }
+}
+
+/* print / PDF export: one slide per landscape page.
+   Chrome --print-to-pdf honors @page size; force 16:9 landscape and
+   lay every slide out in document flow (screen mode display:none is
+   overridden here) so each slide becomes its own page. */
+@media print {
+  @page { size: 1280px 720px; margin: 0; }
+  html, body { overflow: visible; height: auto; background: var(--page) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .progress, .footer, .hint, .notes, .glow { display: none !important; }
+  .deck { position: static; }
+  .slide {
+    display: flex !important; opacity: 1 !important; position: relative;
+    inset: auto; width: 1280px; height: 720px; animation: none;
+    padding: 4.5rem 5rem; justify-content: center;
+    break-after: page; page-break-after: always; overflow: hidden;
+  }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  .slide .reveal { opacity: 1 !important; animation: none !important; transform: none !important; }
+  /* the kicker is absolutely positioned for screen; in print flow it
+     collides with the eyebrow, and both name the same thing — drop it. */
+  .slide .kicker { display: none; }
+  /* keep two-column layouts as real columns on the printed page */
+  .split, .split.narrow-left { display: grid; grid-template-columns: 1fr 1fr; height: auto; }
+  .split.narrow-left { grid-template-columns: 0.85fr 1.15fr; }
+  /* code blocks: pin a print-safe size so a full snippet fits one page */
+  .codeblock pre { font-size: 0.95rem; line-height: 1.6; }
+  .codeblock { margin-top: 1rem; }
+}
+
+/* Content-specific spacing. The reference's type, palette, and layouts remain intact. */
+.copy { display:flex; flex-direction:column; gap:1rem; }
+.copy .clean { margin-top:0; }
+.copy p { max-width:44ch; }
+.steps { padding-left:1.4em; display:flex; flex-direction:column; gap:1rem; }
+.steps li::marker { color:var(--blue); font-family:var(--mono); }
+.aside,.byline { margin-top:1.5rem; }
+.footnote { position:absolute; right:var(--pad); bottom:3.5rem; margin:0; font-size:0.8rem; color:var(--ink-3); }
+.byline { color:var(--ink-3); font-size:1rem; }
+.notes .nb { white-space:pre-wrap; font-size:0.95rem; line-height:1.5; }
+.lead { margin-top:1.5rem; }
+.emoji { font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif; font-weight:400; font-style:normal; letter-spacing:normal; text-transform:none; }
+.eyebrow .slide-icon { font-size:1.35em; vertical-align:-0.08em; margin-right:0.3em; }
+h2 .slide-icon { font-size:0.75em; }
+.clean li.with-emoji::before { display:none; }
+.clean li.with-emoji > .emoji:first-child { position:absolute; left:0; top:0.05em; }
+.contact .c-k { flex-basis:7.5rem; display:inline-flex; align-items:center; gap:0.55rem; }
+.contact-icon { width:1.15rem; height:1.15rem; flex:none; color:var(--ink-2); }
+.evidence-copy { margin-top:1.5rem; }
+.evidence-copy > p { margin-top:0.8rem; }
+.evidence-copy > p:first-child { color:var(--blue); font-size:1.05rem; }
+.evidence-copy .codeblock { margin-top:0.8rem; }
+.evidence-copy .codeblock pre { font-size:clamp(1.05rem,1.65vw,1.4rem); line-height:1.5; }
+.thank-you { justify-content:center; }
+.thank-you h1 { max-width:12ch; }
+.qr-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1.2rem; width:100%; margin-top:clamp(2rem,6vh,4.5rem); }
+.qr-card { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; min-height:clamp(18rem,40vh,24rem); padding:1.75rem; border:1px solid var(--hairline); border-radius:16px; background:var(--surface); color:var(--ink); text-align:center; text-decoration:none; }
+.slide .qr-card { border-bottom:1px solid var(--hairline); }
+.slide .qr-card:hover { border-color:var(--blue); }
+.qr-card:focus-visible { outline:3px solid var(--blue); outline-offset:3px; }
+.qr-card img { width:clamp(10rem,15vw,14rem); height:clamp(10rem,15vw,14rem); flex:none; border-radius:6px; }
+.qr-card .k { display:block; font-size:0.72rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--blue); }
+.qr-card h3 { margin-top:0.4rem; color:var(--ink); }
+.qr-card p { margin-top:0.3rem; font-size:clamp(0.9rem,1.15vw,1.05rem); }
+.chart-wrap svg { display:block; width:100%; height:auto; }
+.loop text { font-family:var(--sans); }
+.loop .arc { fill:none; stroke-width:12; }
+.loop .lk { fill:none; stroke:currentColor; stroke-width:1.25; opacity:0.45; }
+.loop .node { fill:var(--page); stroke:currentColor; stroke-width:2; }
+.loop .num { fill:currentColor; font-family:var(--mono); font-size:12px; font-weight:700; text-anchor:middle; }
+.loop .c { fill:var(--surface); }
+.loop .bar { fill:currentColor; }
+.loop .k { fill:currentColor; font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.14em; }
+.loop .own { fill:var(--ink-3); font-family:var(--mono); font-size:9px; font-weight:600; letter-spacing:0.12em; text-anchor:end; }
+.loop .t { fill:var(--ink); font-size:16px; font-weight:700; }
+.loop .b { fill:var(--ink-2); font-size:12px; }
+.loop .hub { fill:var(--surface); stroke:var(--hairline); }
+.loop .hub-k { fill:var(--ink-3); font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; text-anchor:middle; }
+.loop .hub-n { fill:var(--ink); font-size:32px; font-weight:800; letter-spacing:-0.02em; text-anchor:middle; }
+.loop .hub-s { fill:var(--ink-3); font-size:13px; text-anchor:middle; }
+.band .zone { fill:var(--surface); }
+.band .zone.auto { fill:rgba(57,135,229,0.09); stroke:rgba(57,135,229,0.4); }
+.band text { font-family:var(--sans); }
+.band .zk { fill:var(--ink-3); font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; }
+.band .zk.accent { fill:var(--blue); }
+.band .zt { fill:var(--ink); font-size:16px; font-weight:700; }
+.band .zt.mid { text-anchor:middle; }
+.band .zb { fill:var(--ink-2); font-size:10.5px; }
+.band .zcap { fill:var(--ink-3); font-size:10.5px; text-anchor:middle; }
+.band .chip { fill:var(--page); stroke:var(--hairline); }
+.band .ct { fill:var(--ink); font-size:12.5px; font-weight:700; text-anchor:middle; }
+.band .cs { fill:var(--ink-3); font-size:9.5px; text-anchor:middle; }
+.band .ca, .band .za { stroke:var(--ink-3); stroke-width:1.5; fill:none; }
+.lanes text { font-family:var(--sans); }
+.lanes .lk { fill:var(--ink-3); font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; }
+.lanes .lk.accent { fill:var(--blue); }
+.lanes .nr { fill:var(--surface); }
+.lanes .nk { fill:var(--ink-3); font-family:var(--mono); font-size:9px; font-weight:700; letter-spacing:0.14em; }
+.lanes .nt { fill:var(--ink); font-size:13.5px; font-weight:700; }
+.lanes .nb { fill:var(--ink-2); font-size:10.5px; }
+.lanes .hot .nr { fill:var(--orange-soft); stroke:rgba(217,89,38,0.5); }
+.lanes .hot .nk, .lanes .hot .nt { fill:var(--orange); }
+.lanes .na { stroke:var(--ink-3); stroke-width:1.5; fill:none; }
+.lanes .na.b { stroke:var(--blue); }
+.lanes .bound { fill:rgba(255,255,255,0.03); }
+.lanes .boundbar { fill:var(--blue); }
+.lanes .boundt { fill:var(--ink-2); font-size:10.5px; }
+.grid .codeblock { margin-top:0; }
+.grid .codeblock pre { font-size:clamp(0.82rem,1.05vw,1.05rem); line-height:1.7; }
+.slide > .stage { position:absolute; top:var(--pad); right:var(--pad); display:flex; align-items:center; gap:0.55rem; z-index:2; }
+.stage svg { width:2.6rem; height:2.6rem; display:block; flex:none; }
+.stage .seg { fill:none; stroke-width:4; stroke:rgba(255,255,255,0.16); }
+.stage .seg.on { stroke:var(--sc); stroke-width:5.5; }
+.stage .lb { font-family:var(--mono); font-size:0.74rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-3); white-space:nowrap; }
+.stage .sn { color:var(--sc); }
+.stage.s1 { --sc:#3987e5; }
+.stage.s2 { --sc:#6478e6; }
+.stage.s3 { --sc:#9085e9; }
+.stage.s4 { --sc:#7f97c4; }
+.stage.s5 { --sc:#4da295; }
+.stage.s6 { --sc:#199e70; }
+.arch text { font-family:var(--sans); }
+.arch .bx { fill:var(--surface); stroke:var(--hairline); }
+.arch .bx.eph { fill:none; stroke-dasharray:6 5; }
+.arch .bt { fill:var(--ink); font-size:16px; font-weight:700; }
+.arch .kk { fill:var(--ink-3); font-family:var(--mono); font-size:9.5px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; text-anchor:end; }
+.arch .bb { fill:var(--ink-2); font-size:11.5px; }
+.arch .pnl { fill:var(--page); stroke:var(--hairline-2); }
+.arch .pl { fill:var(--blue); font-family:var(--mono); font-size:9.5px; font-weight:700; letter-spacing:0.13em; text-transform:uppercase; }
+.arch .pb { fill:var(--ink-2); font-family:var(--mono); font-size:11px; }
+.arch .pb.dim { fill:var(--ink-3); }
+.arch .ar { stroke:var(--ink-3); stroke-width:1.5; fill:none; }
+.arch .al { fill:var(--ink-3); font-family:var(--mono); font-size:9px; letter-spacing:0.06em; text-anchor:middle; }
+.table-wrap { margin-top:1rem; overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:clamp(1rem,1.5vw,1.25rem); line-height:1.4; }
+th { text-align:left; color:var(--blue); font-weight:600; }
+th,td { padding:0.7rem 1rem; border-bottom:1px solid var(--hairline); vertical-align:top; }
+td { color:var(--ink-2); }
+th:first-child,td:first-child { padding-left:0; }
+@media(max-width:900px) { .slide { padding-bottom:6rem; } .split { height:auto; } .hint { display:none; } .notes { width:calc(100vw - 3rem); } }
+@media(prefers-reduced-motion:reduce) { .slide.active,.slide.active .reveal { animation:none; opacity:1; } }
+@media print { .copy .clean { gap:0.85rem; } }
+
+.orch text, .herd text { font-family:var(--sans); }
+.orch .zone { fill:var(--surface); }
+.orch .zone.auto { fill:rgba(57,135,229,0.09); stroke:rgba(57,135,229,0.4); }
+.orch .zk { fill:var(--ink-3); font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; }
+.orch .zk.accent, .orch .zb.accent { fill:var(--blue); }
+.orch .zk.ok { fill:var(--aqua); }
+.orch .zt { fill:var(--ink); font-size:19px; font-weight:700; }
+.orch .zb { fill:var(--ink-2); font-size:14px; }
+.orch .zcap { fill:var(--ink-3); font-size:13px; text-anchor:middle; }
+.orch .chip { fill:var(--page); stroke:var(--hairline); }
+.orch .ca, .orch .za { stroke:var(--ink-3); stroke-width:1.5; fill:none; }
+.orch .back { stroke:var(--blue); stroke-width:2; fill:none; stroke-dasharray:6 5; }
+.orch .backt { fill:var(--blue); font-size:14px; font-weight:600; text-anchor:middle; }
+.herd .win { fill:var(--surface); stroke:var(--hairline); }
+.herd .dot { fill:var(--surface-2); stroke:var(--hairline); }
+.herd .tabt { fill:var(--ink-2); font-family:var(--mono); font-size:12px; }
+.herd .side { fill:var(--page); }
+.herd .sk { fill:var(--ink-3); font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.18em; }
+.herd .sn { fill:var(--ink); font-size:14px; font-weight:700; }
+.herd .ss { fill:var(--ink-3); font-family:var(--mono); font-size:11px; }
+.herd .st.work { fill:var(--blue); }
+.herd .st.wait { fill:var(--yellow); }
+.herd .pane { fill:var(--page); stroke:var(--hairline-2); }
+.herd .pk { fill:var(--blue); font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:0.16em; }
+.herd .pk.ok, .herd .pl.ok { fill:var(--aqua); }
+.herd .pl { fill:var(--ink-2); font-family:var(--mono); font-size:13px; }
+.herd .pl.dim { fill:var(--ink-3); }
+.grid .card .clean { margin-top:0.6rem; gap:0.7rem; }
+.grid .card .clean li { font-size:var(--type-detail); }
+
+/* ---------- title slide: GitHub Dev Days 2026 lockup ---------- */
+:root { --gh-green: #3fb950; --gh-night: #0b0420; }
+.event-title > :not(.event-art) { max-width: 60%; position: relative; z-index: 1; }
+.event-title .gh-mark { width: clamp(2.6rem, 3.6vw, 3.6rem); height: auto; fill: var(--ink); margin-bottom: 2.4rem; display: block; }
+.event-lockup { display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 3rem; }
+.event-lockup .event-name { font-family: var(--mono); font-weight: 600; font-size: clamp(1.6rem, 2.6vw, 2.6rem); letter-spacing: 0.14em; text-transform: uppercase; color: var(--gh-green); }
+.event-lockup .event-city { font-size: clamp(2.6rem, 4.6vw, 4.6rem); font-weight: 500; line-height: 1; letter-spacing: -0.02em; color: var(--ink); }
+.event-title h1 { font-size: var(--type-heading); max-width: 20ch; }
+.event-art { position: absolute; top: 0; right: 0; bottom: 0; width: 36%; background: var(--gh-night) url(dev-days-art.jpg) left center / cover no-repeat; border-left: 4px solid var(--gh-green); }
+@media(max-width:900px) { .event-art { display:none; } .event-title > :not(.event-art) { max-width:none; } }
+
+
+/* ---------- beyond-llms additions ---------- */
+.event-title > * { max-width: none; }
+.event-lockup .event-name { color: var(--blue); }
+.gen-ink { color: var(--orange); }
+.flow .node.decide { border-color: var(--blue); background: var(--blue-soft); }
+.flow .node.decide .n-k { color: var(--blue); }
+.flow .node.gen { border-color: var(--orange); background: var(--orange-soft); }
+.flow .node.gen .n-k { color: var(--orange); }
+.flow .node.code .n-k { color: var(--aqua); }
+.flow.trace { gap: 0.6rem; }
+.codeblock.mini pre { font-size: clamp(0.9rem, 1.2vw, 1.1rem); margin: 0.6rem 0; }
+.arch-row .outcomes { margin-top: 2rem; }
+td.ok-ink { color: var(--aqua); }
+.split .codeblock pre { font-size: clamp(0.8rem, 1.05vw, 1.05rem); white-space: pre; overflow-x: auto; }
+@media (max-width: 900px) { .flow.trace { display: grid; grid-template-columns: 1fr 1fr; } }
+.big-list { font-size: var(--type-body); gap: 1.2rem; display: flex; flex-direction: column; margin-top: 2rem; }
+</style></head>
+<body><noscript>This presentation requires JavaScript for navigation.</noscript>
+<div class="progress"></div><div class="glow a"></div><div class="glow b"></div>
+<main class="deck"><section class="slide statement event-title active" aria-label="Slide 1: Beyond LLMs" data-notes="0:00 to 0:30. Slot: 6:30 to 8:00 PM, Frisco Library. Talk runs about 45 minutes, then Q&amp;A.
+
+Don’t introduce yourself yet. Go straight to the next slide and ask the question. The bio comes after the room is already thinking.
+
+Before you start: font size up in the terminal, light theme if the projector washes out dark."><div class="event-lockup reveal"><span class="event-name">AWS User Group DFW</span><span class="event-city">Frisco</span></div><h1 class="reveal">Beyond <span class="accent">LLMs</span></h1><p class="sub reveal">Decision models for smarter AI agents</p><p class="byline reveal">Bharadwaj Pendyala</p></section>
+<section class="slide statement" aria-label="Slide 2: A question for the room" data-notes="0:30 to 2:00.
+
+“Quick show of hands. Who here has an agent, or a pipeline with an LLM in it, running somewhere? Keep them up. Now keep it up if one of the steps in there returns a single word, like ‘billing’ or ‘yes’.
+
+“Yeah. Most of the hands stayed up, right?
+
+“So that’s what I want to poke at tonight. We are paying a model that can write a novel to tell us the word ‘billing’. And we wait ten seconds for it. And then we write a regex to find the word in its answer.”
+
+Wait for the laugh. Then go."><div class="reveal"><span class="eyebrow">Hands up</span></div><h1 class="reveal">Who has an agent that waits ten seconds to say <span class="accent">“billing”</span>?</h1></section>
+<section class="slide" aria-label="Slide 3: One agent run, colored in" data-notes="2:00 to 4:00.
+
+“Here is one run of a support agent. A refund ticket comes in. Let’s walk the steps and color each one.
+
+“Which team owns this? That’s a decision. Is it urgent? Decision. Does the customer want money back? Decision. Which tool do I call next? Decision. Look up the order. That’s plain code, no model needed. Was it a duplicate charge? Decision. Write the reply. Finally, that one actually needs words.
+
+“Six model calls. One of them produces prose. Five of them pick from a short list.
+
+“Here’s the rule I used to color them. If you could write down every possible answer today, it’s a decision. If the answer is new text, it’s generate. If plain code can do it, it’s code.
+
+“Most of the steps in an agent are decisions. Keep that picture in your head, because the rest of the talk hangs off it. And you don’t have to color yours by hand. There’s a script for it at the end.”"><span class="eyebrow reveal">One agent run</span><h2 class="reveal">Color every step: <span class="accent">decide</span> or <span class="gen-ink">generate</span></h2>
+<div class="flow trace reveal"><div class="node decide"><span class="n-k">decide</span><span class="n-t">Which team?</span></div><div class="node decide"><span class="n-k">decide</span><span class="n-t">Urgent?</span></div><div class="node decide"><span class="n-k">decide</span><span class="n-t">Wants a refund?</span></div><div class="node decide"><span class="n-k">decide</span><span class="n-t">Next tool?</span></div><div class="node code"><span class="n-k">code</span><span class="n-t">Look up order</span></div><div class="node decide"><span class="n-k">decide</span><span class="n-t">Duplicate charge?</span></div><div class="node gen"><span class="n-k">generate</span><span class="n-t">Write the reply</span></div></div>
+<p class="aside reveal">The rule: if you could write down every possible answer today, it’s a decision. Six model calls here, and only one needs prose.</p></section>
+<section class="slide" aria-label="Slide 4: Who's talking" data-notes="4:00 to 4:30.
+
+“I’m Bharadwaj. I’m a Lead Member of Technical Staff at Salesforce, and I build the tooling around agents. Slides and code are linked at the end, so don’t bother taking photos.
+
+“One more thing. This is education, not a pitch. I’ll talk about two vendors tonight, because they are the two shipping this today. Same idea, two spellings. The demos use one of them, Jev, to keep things short.”
+
+TODO before Thursday: if you have any relationship with TypeSafe or OpenAI beyond being a customer, say so here in one sentence."><div class="split"><div><div class="reveal"><span class="eyebrow">Who’s talking</span></div><h2 class="reveal">Bharadwaj<br>Pendyala</h2><p class="lead reveal">Lead Member of Technical Staff at Salesforce. I build the tooling around agents.</p><p class="reveal muted aside">Education, not a pitch. Two vendors, one idea.</p></div><div><ul class="contact reveal"><li><span class="c-k">Slides</span><a href="https://bharad.dev/talks" target="_blank" rel="noopener noreferrer">bharad.dev/talks</a></li><li><span class="c-k">LinkedIn</span><a href="https://www.linkedin.com/in/bharadwajpendyala/" target="_blank" rel="noopener noreferrer">in/bharadwajpendyala</a></li><li><span class="c-k">GitHub</span><a href="https://github.com/bharadwaj-pendyala" target="_blank" rel="noopener noreferrer">bharadwaj-pendyala</a></li><li><span class="c-k">X</span><a href="https://x.com/bharadwaj_py" target="_blank" rel="noopener noreferrer">@bharadwaj_py</a></li></ul></div></div></section>
+<section class="slide" aria-label="Slide 5: The tax we pay today" data-notes="6:00 to 8:00.
+
+“So what does it cost to answer a decision with an LLM? Three things.
+
+“Time. I ran six tickets through Claude Haiku with claude -p on my laptop. About ten seconds each. To be fair, that includes the CLI starting up, so the raw API is faster. But it’s still seconds, not milliseconds. Multiply that by five decisions per run.
+
+“Strings. The model gives you text. Your code has to find the JSON in it, parse it, and hope the field names are right. Here’s the line from my demo that does it. A regex. In 2026.
+
+“And the confidence. Confidence is how sure the model is, from zero to one. I asked Haiku for it. It said ninety seven percent on one ticket and forty on another. But the model wrote that number as text, the same way it writes any other word. Nothing measured it. Research that asks models to state their confidence finds those numbers tend to run high. You could read token probabilities instead, but the Claude API doesn’t expose them.
+
+“To be fair, Haiku’s forty percent on the vague ticket was a sensible answer. The problem is that you can’t tell when to trust the number.”
+
+The ~10 s figure is from the Nov 17 run of 1-llm.ts (9.7 to 10.3 s). Re-run at the venue.
+
+Source for overconfidence: Xiong et al., 2023, “Can LLMs Express Their Uncertainty?”, arXiv 2306.13063."><span class="eyebrow reveal">The tax</span><h2 class="reveal">What a decision costs on an LLM</h2>
+<div class="grid cols-3 reveal"><div class="card stat"><span class="num orange">~10s</span><span class="lbl">per ticket, Haiku via <code>claude -p</code> on my laptop (includes CLI startup)</span></div><div class="card"><span class="k danger">Strings</span><div class="codeblock mini"><pre>reply.match(<span class="bad">/\{[\s\S]*\}/</span>)</pre></div><p>Find the JSON in the prose. Hope the fields are right.</p></div><div class="card"><span class="k danger">Self-reported confidence</span><p>“97% sure.” The model writes that number as text. Nothing measures it.</p></div></div></section>
+<section class="slide statement" aria-label="Slide 6: The idea" data-notes="8:00 to 8:20.
+
+“So here’s the whole talk in one line. If a step’s answer comes from a short list, don’t pay for prose.”
+
+Pause. Let it land."><div class="reveal"><span class="eyebrow">The idea</span></div><h1 class="reveal">If the answer comes from a short list, <span class="accent">don’t pay for prose</span>.</h1></section>
+<section class="slide" aria-label="Slide 7: System 1 and System 2" data-notes="8:20 to 10:30.
+
+“This split comes from a book. Daniel Kahneman, Thinking, Fast and Slow, 2011. Kahneman was a psychologist, and he won the 2002 Nobel prize in economics for his work on how people make decisions. The labels System 1 and System 2 came from two other researchers, Keith Stanovich and Richard West. Kahneman made them famous.
+
+“Someone throws you a ball, you catch it. You don’t calculate anything. That’s System 1. Fast, automatic. Now do your taxes. Slow, step by step, you check your work. System 2.
+
+“Quick test from the book. A bat and a ball cost a dollar ten. The bat costs a dollar more than the ball. How much is the ball? Shout it out.
+
+“Most people say ten cents. It’s five cents. That fast answer is System 1. Quick, confident, and sometimes wrong. Remember that, because it’s why we check the confidence later.
+
+“LLMs are the closest thing we have to System 2. Especially with reasoning on, they work through a problem step by step, in tokens. That’s great for planning, for writing code, for a problem nobody has seen.
+
+“But we’ve been using them for ball-catching too. Every ‘which team’ and ‘is it urgent’ goes through the slow machine.
+
+“Decision models are System 1. The name isn’t mine. TypeSafe calls their models ‘System One models’. Treat it as an analogy, not a spec. You give it the state and a few questions. It gives you all the answers at once, as values, with probabilities.
+
+“Look at the last row. That’s the shift. Your code stops parsing and starts branching.”"><span class="eyebrow reveal">Two kinds of thinking</span><h2 class="reveal">System 1 catches the ball. System 2 does your taxes.</h2>
+<div class="table-wrap reveal"><table><thead><tr><th scope="col"></th><th scope="col">System 2: LLM</th><th scope="col">System 1: decision model</th></tr></thead><tbody><tr><td>Good at</td><td>Planning, writing, new problems</td><td>Picking from a short list</td></tr><tr><td>Output</td><td>Text, one token at a time</td><td>Answers from your list, all at once</td></tr><tr><td>Confidence</td><td>A number it writes</td><td>Probabilities it’s trained to get right</td></tr><tr><td>Your code</td><td>Parses</td><td>Branches</td></tr></tbody></table></div>
+<p class="aside reveal">From Daniel Kahneman, <em>Thinking, Fast and Slow</em> (2011). An analogy, not a spec.</p></section>
+<section class="slide" aria-label="Slide 8: What a decision model is" data-notes="10:30 to 12:00.
+
+“So what is a decision model, mechanically? It’s a function call. That’s honestly the best way to think about it.
+
+“Two words first. State is everything the model needs to look at. The ticket, the order, the chat so far. Think of it as the file you hand a colleague before you ask them something. And a decision is a question with a fixed set of answers.
+
+“In: the state, and a set of questions. Each question says what shape its answer takes and lists the allowed answers.
+
+“Out: one answer per question. Plus a probability for every option, plus a confidence.
+
+“You’ll hear people call this typed. All it means is that the question declares the shape of its answer, and you always get that shape back. A choice gives you one label from your list. A score gives you a number on your scale. A yes or no gives you one probability. Like a function that always returns a number, never a sentence about a number.
+
+“Two details matter. The questions run in parallel and don’t see each other, so adding a fourth question doesn’t make the first three worse. And you can’t get an answer that isn’t on your list. If you said billing, technical, shipping, other, you get one of those four. Every time.
+
+“That second point is about the shape, by the way. Not the truth. It can still pick the wrong one of the four. We’ll come back to that.”"><span class="eyebrow reveal">Mechanically</span><h2 class="reveal">A decision model is a function call</h2>
+<div class="flow reveal"><div class="node"><span class="n-k">in</span><span class="n-t">State</span></div><div class="arrow">+</div><div class="node"><span class="n-k">in</span><span class="n-t">Questions + allowed answers</span></div><div class="arrow">→</div><div class="node decide"><span class="n-k">model</span><span class="n-t">One request</span></div><div class="arrow">→</div><div class="node"><span class="n-k">out</span><span class="n-t">One answer each</span></div><div class="arrow">+</div><div class="node"><span class="n-k">out</span><span class="n-t">Probabilities</span></div></div>
+<p class="aside reveal">Questions run in parallel. Answers always come from your list. That guarantees the shape, not the truth.</p></section>
+<section class="slide" aria-label="Slide 9: The question types" data-notes="12:00 to 13:30.
+
+“There are basically four question types. The names differ by vendor, which is annoying, so I put both.
+
+“Choice: pick one from a list. Which team, or which model.
+
+“Score: a position on an ordered scale. Urgency from ‘can wait’ to ‘blocked right now’. You get back a number like 1.7, which means ‘mostly blocked, a bit of today’. That in-between number is useful.
+
+“Yes or no: TypeSafe calls it a noul, OpenAI calls it a predicate. You get the probability that the statement is true.
+
+“And box: find something in an image. Only Jev has that one today, and it’s marked experimental.
+
+“If you squint, most agent decisions are one of the first three.”"><span class="eyebrow reveal">The building blocks</span><h2 class="reveal">Four question types</h2>
+<div class="grid cols-4 reveal"><div class="card"><span class="k">Choice</span><h3>One of a list</h3><p>Which team? Which model?</p></div><div class="card"><span class="k">Score</span><h3>Where on a scale</h3><p>How urgent? Returns 1.7, not just “high”.</p></div><div class="card"><span class="k">Yes or no</span><h3>How likely true</h3><p>Jev: <code>noul</code>. OpenAI: <code>predicate</code>.</p></div><div class="card"><span class="k">Box</span><h3>Where in an image</h3><p>Jev only, experimental.</p></div></div></section>
+<section class="slide" aria-label="Slide 10: Example one, Jev" data-notes="13:30 to 15:30.
+
+“First example. Jev, from a startup called TypeSafe. Their founder came from OpenAI. They trained it with a method they call RLCD, reinforcement learning for calibrated decisions. It’s in the corner of the slide.
+
+“Calibrated is the important word. A weather forecast is calibrated if it rains on about seven out of ten days it says seventy percent. Same for a model. If it says ninety percent, it should be right about nine times out of ten.
+
+“Here’s the whole request. One URL. State is the ticket. Three questions, keyed by name. That’s it. No system prompt, no ‘you are a helpful assistant’, no ‘reply in JSON’.
+
+“Their numbers: 70 to 500 milliseconds end to end, and input at 4.2 cents per million tokens. Those are their claims, from their own launch post, and the post itself says they ran the evals from their laptops on the West Coast. So I’m not going to put them on a slide as facts. We’ll measure on stage instead.”
+
+Source: typesafe.ai/blog/introducing-system-one-models-and-jev and docs.typesafe.ai/api."><div class="split"><div><span class="eyebrow reveal">Example 1</span><h2 class="reveal">Jev, from TypeSafe</h2><ul class="clean reveal"><li>Trained for calibrated probabilities (they call it RLCD).</li><li>Choice, score, noul, box.</li><li>Vendor claim: 70 to 500 ms end to end.</li></ul><p class="aside reveal">We’ll measure it live instead of trusting the slide.</p></div><div class="codeblock reveal"><div class="cb-head"><span class="fname">POST api.typesafe.ai/v1/systemone</span><span class="tag">2-jev.ts</span></div><pre>{
+  <span class="kw">model</span>: <span class="str">'jev-latest'</span>,
+  <span class="kw">state</span>: { ticket },
+  <span class="kw">questions</span>: {
+    <span class="an">department</span>: {
+      type: <span class="str">'choice'</span>,
+      instructions: <span class="str">'Which team should handle this?'</span>,
+      criteria: DEPARTMENTS,
+    },
+    <span class="an">urgency</span>: { type: <span class="str">'score'</span>, ... },
+    <span class="an">wantsRefund</span>: { type: <span class="str">'noul'</span>, ... },
+  },
+}</pre></div></div><p class="footnote reveal">RLCD: reinforcement learning for calibrated decisions</p></section>
+<section class="slide" aria-label="Slide 11: Example two, OpenAI Decisions" data-notes="13:30 to 15:30 continued, about 1.5 minutes.
+
+“Second example. OpenAI shipped the same idea as the Decisions API. It went generally available last month. One model for now, gpt-6-luna.
+
+“Look how close the request is. Input instead of state. A list of questions with names instead of an object. Predicate instead of noul. Same three questions.
+
+“OpenAI’s own docs say it’s about 10x faster than the Responses API for this kind of task. And it takes up to 400 questions in one request.
+
+“When two companies ship nearly the same API shape within a couple of months, I read that as a category forming.
+
+“I won’t demo this one tonight. Same idea, and one engine keeps the demo short.”
+
+Sources: developers.openai.com/api/docs/guides/decisions. GA date from the OpenAI community announcement; re-check the date before stage."><div class="split"><div><span class="eyebrow reveal">Example 2</span><h2 class="reveal">OpenAI Decisions API</h2><ul class="clean reveal"><li>Generally available, one model: <code>gpt-6-luna</code>.</li><li>Choice, score, predicate.</li><li>OpenAI: about 10x faster than the Responses API for these tasks.</li></ul><p class="aside reveal">Two vendors shipped nearly the same shape.</p></div><div class="codeblock reveal"><div class="cb-head"><span class="fname">POST api.openai.com/v1/decisions</span><span class="tag">docs example</span></div><pre>{
+  <span class="kw">model</span>: <span class="str">'gpt-6-luna'</span>,
+  <span class="kw">input</span>: ticket,
+  <span class="kw">questions</span>: [
+    {
+      type: <span class="str">'choice'</span>,
+      name: <span class="an">'department'</span>,
+      instructions: <span class="str">'Which team should handle this?'</span>,
+      choices: [...],
+    },
+    { type: <span class="str">'score'</span>, name: <span class="an">'urgency'</span>, ... },
+    { type: <span class="str">'predicate'</span>, name: <span class="an">'wantsRefund'</span>, ... },
+  ],
+}</pre></div></div></section>
+<section class="slide" aria-label="Slide 12: Where it sits in an agent" data-notes="15:30 to 18:00.
+
+“OK, so where does this go in a real agent? Here’s the shape I’d start with.
+
+“The LLM is still the planner. It reads the goal and decides the big steps. But at every branch, instead of asking the LLM ‘which way?’, the code asks a decision model.
+
+“And then the important part, on the right. The decision model gives you a confidence. Your code, not the model, decides what that confidence means. Above a line you set, act on it. Below it, hand it back to the LLM to think harder. Way below, or anything risky, a person looks at it.
+
+“This is the same idea as the harness talk I gave at ACM in August. The model is the engine. The harness is the car. Decision models are a really cheap part you can bolt onto the car.
+
+“Is this clear? Good, because next we run it.”"><span class="eyebrow reveal">The architecture</span><h2 class="reveal">LLM plans. Decision model branches. Code sets the line.</h2>
+<div class="arch-row reveal"><div class="flow"><div class="node gen"><span class="n-k">system 2</span><span class="n-t">LLM plans the steps</span></div><div class="arrow">→</div><div class="node decide"><span class="n-k">system 1</span><span class="n-t">Decision model at each branch</span></div><div class="arrow">→</div><div class="node code"><span class="n-k">code</span><span class="n-t">Confidence check</span></div></div>
+<div class="grid cols-3 outcomes"><div class="card"><span class="k ok">Sure enough</span><p>Act on it.</p></div><div class="card"><span class="k">Not sure</span><p>Ask the LLM to think it through.</p></div><div class="card"><span class="k danger">Risky or lost</span><p>A person decides.</p></div></div></div></section>
+<section class="slide statement" aria-label="Slide 13: Demo one" data-notes="18:00 to 25:00. Demo 1, about seven minutes.
+
+Setup before the talk: cd ~/Documents/Github/beyond-llms-demo. TYPESAFE_API_KEY exported. Run every step once at the venue so .cache/ is fresh. If the Wi-Fi dies, every step replays from .cache/ and prints ‘offline, replaying’.
+
+1. Open tickets.ts. Read T-1042 (the refund) and T-1047 (‘third time I am writing’) aloud. (30 sec)
+2. npm run llm. Let it crawl. Say: “While this runs, look at parseTriage. That regex is load-bearing.” (1 min)
+3. npm run jev. Point at the ms column. (1 min)
+4. Open 4-route.ts. Eight lines. Code owns the line: SURE_ENOUGH = 0.8. (1 min)
+5. npm run route. T-1047 should go to the human queue. That’s the planned failure: “Neither engine can tell what this person is angry about. Good. It shouldn’t guess. It told us it doesn’t know, and the code listened.” (2 min)
+In testing, Jev put T-1047 at 41% to 68%. Run it twice if you want to show that confidence moves a little.
+6. If T-1047 does NOT go to the human queue, that is also a lesson: raise SURE_ENOUGH live to 0.9 and run again. Say: “The threshold is a product decision, not a model decision.”"><div class="reveal"><span class="eyebrow">Live</span></div><h1 class="reveal">Demo 1: triage six tickets</h1><p class="sub reveal">Same three questions. An LLM, then Jev.</p></section>
+<section class="slide" aria-label="Slide 14: What you just saw" data-notes="25:00 to 26:30.
+
+“Let’s replay that. Fill these in with what actually happened on stage.
+
+“Same questions, two engines. The LLM took about ten seconds per ticket and handed us a string. Jev took about a tenth of a second and handed us values.
+
+“And the ticket where the person was just angry, with no detail. Both of them said ‘unclear’, and both were unsure. Good. A good system says ‘I don’t know’ there. The difference is that Jev’s number is trained to mean something, so the code can act on it.”
+
+Numbers from the Nov 17 run. Re-run at the venue and update if they change. If Jev was not faster in the room, say so plainly."><span class="eyebrow reveal">Replay</span><h2 class="reveal">What you just saw</h2>
+<div class="table-wrap reveal"><table><thead><tr><th scope="col"></th><th scope="col">LLM (Haiku)</th><th scope="col">Jev</th></tr></thead><tbody><tr><td>Time per ticket</td><td>~10 s*</td><td>85 to 180 ms</td></tr><tr><td>Output</td><td>A string to parse</td><td>Values</td></tr><tr><td>“Third time I am writing”</td><td>unclear, 40%, self-reported</td><td>unclear, 62%, sent to a person</td></tr></tbody></table></div>
+<p class="aside reveal">* Includes <code>claude -p</code> startup on a laptop.</p></section>
+<section class="slide statement" aria-label="Slide 15: Point it at your own tools" data-notes="26:30 to 27:00.
+
+“Tickets are the obvious example. Every vendor demo is ticket triage. So let’s point the same idea at something closer to home. The tool most of us have open right now.”"><div class="reveal"><span class="eyebrow">Closer to home</span></div><h1 class="reveal">Now point it at your <span class="accent">coding agent</span>.</h1></section>
+<section class="slide" aria-label="Slide 16: Picking a model is a chore" data-notes="27:00 to 28:30.
+
+“Who uses Claude Code, or Codex, or Cursor? Who changes the model by hand during the day? Yeah. Me too.
+
+“Renaming a variable on Opus is like hiring a structural engineer to hang a picture. And designing a new auth layer on Haiku is the other mistake. So you type /model, pick one, do the task, and forget to switch back. Then your agent spawns subagents, and they all just inherit whatever you picked.
+
+“Picking a model is a decision. A choice from three options. Sounds familiar?”"><span class="eyebrow reveal">The chore</span><h2 class="reveal">Picking a model is a decision. We make it by hand.</h2>
+<div class="grid cols-3 reveal"><div class="card"><span class="k">Haiku</span><h3>Rename a variable</h3><p>Read files, run a command, quick answers.</p></div><div class="card"><span class="k">Sonnet</span><h3>Add CSV export</h3><p>Everyday features, clear bugs, tests.</p></div><div class="card"><span class="k ok">Opus</span><h3>Design the auth layer</h3><p>Open-ended work, many files, bugs nobody understands.</p></div></div>
+<p class="aside reveal">And every subagent inherits whatever you picked last.</p></section>
+<section class="slide" aria-label="Slide 17: jev-router" data-notes="28:30 to 30:30.
+
+“So I built jev-router. It’s a Claude Code mod, about a hundred lines in two files.
+
+“It hooks two moments. When you submit a prompt, it asks Jev one question: which model should do this? If Jev is sure enough, that prompt’s turn runs on that model. Your /model setting stays as it was. And it only routes prompts you type, not background notifications. And when the agent starts a subagent, it asks the same question about the subagent’s task and sets that subagent’s model.
+
+“Both hooks have a catch around them. If Jev is down, or you don’t have a key, nothing happens. Your prompt goes through like the mod isn’t there. A router should never be the reason your agent stops.”"><span class="eyebrow reveal">The mod</span><h2 class="reveal">jev-router: one question, two hooks</h2>
+<div class="grid cols-2 reveal"><div class="card"><span class="k">prompt.submit</span><h3>Your prompt</h3><p>Jev picks a model. If it’s sure enough, that turn runs on it. No <code>/model</code>.</p></div><div class="card"><span class="k">agent.spawn</span><h3>Every subagent</h3><p>Jev picks a model for the subagent’s task. The subagent starts on it.</p></div></div>
+<p class="aside reveal">No key, or Jev is down? The prompt goes through untouched.</p></section>
+<section class="slide" aria-label="Slide 18: The whole prompt" data-notes="30:30 to 31:30.
+
+“And this is the whole prompt. Three lines of plain English, one per model. That’s the entire routing logic. No rules engine, no if-statements on keywords.
+
+“If you disagree with where I drew the lines, and you will, you edit three sentences.”"><div class="split"><div><span class="eyebrow reveal">The whole prompt</span><h2 class="reveal">The routing logic is three sentences</h2><p class="aside reveal">Disagree with the lines? Edit the sentences.</p></div><div class="codeblock reveal"><div class="cb-head"><span class="fname">jev-router/hooks/jev.ts</span><span class="tag">criteria</span></div><pre><span class="kw">const</span> MODELS = {
+  <span class="an">haiku</span>:
+    <span class="str">'Small and clear: rename something, read or
+     search files, run a command, answer a
+     quick question.'</span>,
+  <span class="an">sonnet</span>:
+    <span class="str">'Everyday coding: build a feature, fix a bug
+     with a clear cause, write tests, review a
+     diff.'</span>,
+  <span class="an">opus</span>:
+    <span class="str">'Hard or open-ended: design a system,
+     refactor many files, chase a bug nobody
+     understands yet.'</span>,
+}</pre></div></div></section>
+<section class="slide" aria-label="Slide 19: The catch" data-notes="31:30 to 33:00.
+
+“Now, the catch. This one bites you in week two.
+
+“When you switch the main session to a new model, you lose the prompt cache. The new model has to read the whole conversation again at full price. On a long session that can cost more than the cheaper model saves.
+
+“Subagents don’t have that problem. They start with a fresh context anyway. So routing subagents is basically free. Routing the main thread is a trade.
+
+“That’s why the mod has a minimum confidence setting. Default 0.7. Only switch when Jev is fairly sure. Claude Code even tells hooks the estimated cost of the cache write before a model switch, so a smarter version could include that in the decision.”"><span class="eyebrow reveal">The catch</span><h2 class="reveal">Switching models throws away the cache</h2>
+<div class="grid cols-2 reveal"><div class="card"><span class="k danger">Main thread</span><h3>A trade</h3><p>The new model re-reads the whole conversation. On a long session, that can cost more than it saves.</p></div><div class="card"><span class="k ok">Subagents</span><h3>Free</h3><p>They start fresh anyway. Route every one.</p></div></div>
+<p class="aside reveal">So the mod only switches the main thread when Jev is at least 70% sure.</p></section>
+<section class="slide statement" aria-label="Slide 20: Demo two" data-notes="33:00 to 38:00. Demo 2, about five minutes.
+
+Setup: start Claude Code with the mod loaded and TYPESAFE_API_KEY set. Status line shows the pick after each prompt: jev → haiku · 91% · 140ms. Start on Sonnet. Use a small throwaway repo (the demo repo itself is fine).
+
+1. Type: “rename the tickets export to supportTickets everywhere”. Expect haiku. Point at the status line and the toast. (1 min)
+2. Type: “add a 5-route.ts that writes the routed tickets to a CSV file”. Expect sonnet. (1 min)
+3. Type: “design how we would add multi-language support to the triage, don’t write code yet”. Expect opus. (1 min)
+4. Type: “use two subagents: one to list every file, one to review 4-route.ts for bugs”. Watch the two toasts: different models for the two subagents. (2 min)
+
+Planned failure: if Jev picks something you disagree with, don’t hide it. Ask the room which model they would have picked. Then open jev.ts and point at the sentence that caused it. That’s the lesson: the routing logic is readable.
+
+If the API is down: the mod does nothing, by design. Say so, and show the recorded run instead."><div class="reveal"><span class="eyebrow">Live</span></div><h1 class="reveal">Demo 2: <span class="accent">jev-router</span></h1><p class="sub reveal">Three prompts, two subagents, no /model.</p></section>
+<section class="slide" aria-label="Slide 21: What you just saw" data-notes="38:00 to 39:00.
+
+“Three prompts, and I never typed /model. The small one went to Haiku, the big one to Opus. The subagents each got their own model.
+
+“And all of the intelligence in the router is one question to a decision model. The rest is plumbing.
+
+“It’s on GitHub, linked at the end. Take it, change the three sentences, make it yours.”
+
+Adjust to what actually happened on stage."><span class="eyebrow reveal">Replay</span><h2 class="reveal">What you just saw</h2>
+<ul class="clean reveal big-list"><li>Three prompts. Zero <code>/model</code> commands.</li><li>Each subagent got its own model.</li><li>All the routing intelligence is one question. The rest is plumbing.</li></ul></section>
+<section class="slide" aria-label="Slide 22: When not to use one" data-notes="39:00 to 40:30.
+
+“Now, when shouldn’t you use these? Three cases.
+
+“If you need words, use an LLM. The reply to the customer, the code, the summary. Decision models don’t write.
+
+“If the step needs to think in several hops, look something up, then think again, that’s System 2 work. Keep it on the LLM.
+
+“And if it’s a hard rule, write the rule. ‘Refunds over five hundred dollars need a manager’ is an if-statement. Don’t ask any model, fast or slow, to guess your policy.
+
+“One more time, because people get this wrong: a fixed list guarantees the shape. Not the truth.”"><span class="eyebrow reveal">Know the limits</span><h2 class="reveal">When not to use a decision model</h2>
+<div class="grid cols-3 reveal"><div class="card"><span class="k">You need words</span><p>Replies, code, summaries. Use the LLM.</p></div><div class="card"><span class="k">You need several hops</span><p>Look up, think, look up again. That’s System 2.</p></div><div class="card"><span class="k danger">It’s a hard rule</span><p>“Refunds over $500 need a manager” is an <code>if</code>. Write it.</p></div></div>
+<p class="aside reveal">A fixed list guarantees the shape, not the truth.</p></section>
+<section class="slide" aria-label="Slide 23: Check the calibration yourself" data-notes="40:30 to 42:30.
+
+“Last practical bit. Every vendor says their model is calibrated. Check it on your own data. It takes an afternoon.
+
+“Take a hundred tickets you’ve already labeled. Run them through. Put the answers in buckets by confidence. Then count.
+
+“Here’s what good looks like. In the ninety percent bucket, about ninety percent are right. In the sixty percent bucket, about sixty. If the ninety bucket is only seventy percent right, the model is overconfident on your data, and your threshold needs to move up.
+
+“That table tells you where to draw your line.”
+
+Illustrative numbers only. They are not from a real run."><span class="eyebrow reveal">Trust, but count</span><h2 class="reveal">Check the calibration on your own data</h2>
+<div class="table-wrap reveal"><table><thead><tr><th scope="col">Model said</th><th scope="col">Answers in bucket</th><th scope="col">Actually right</th><th scope="col">Verdict</th></tr></thead><tbody><tr><td>90 to 100%</td><td>50</td><td>46 (92%)</td><td class="ok-ink">Calibrated</td></tr><tr><td>70 to 90%</td><td>30</td><td>24 (80%)</td><td class="ok-ink">Calibrated</td></tr><tr><td>Below 70%</td><td>20</td><td>9 (45%)</td><td>Send to a person</td></tr></tbody></table></div>
+<p class="aside reveal">Example numbers. A hundred labeled tickets and an afternoon gets you yours.</p></section>
+<section class="slide" aria-label="Slide 24: Three things to take home" data-notes="42:30 to 44:00.
+
+“Three things to take home.
+
+“One. Color your agent’s steps. Count the decisions. I bet most of them are. Put your steps in a text file, one per line, and run npm run color from the demo repo. Jev colors them for you.
+
+“Two. Move those to a decision model, and let code own the threshold.
+
+“Three. Measure calibration on your own data before you trust anyone’s, including mine.
+
+“And one prediction, which is just my bet. In a year, agent harnesses will ship with a small decision model next to the big one, the same way they ship with a cheap model today. You won’t pick it. It’ll just be there.”"><span class="eyebrow reveal">Take home</span><h2 class="reveal">Three things</h2>
+<ol class="steps reveal big-list"><li>Color your agent’s steps with <code>npm run color</code>. Count the decisions.</li><li>Move them to a decision model. Let code own the threshold.</li><li>Measure calibration on your data before you trust anyone’s.</li></ol>
+<p class="aside reveal">My bet: in a year, agent harnesses ship a decision model next to the LLM by default.</p></section>
+<section class="slide statement thank-you" aria-label="Slide 25: Thank you" data-notes="44:00 to 45:00, then questions until 8:00 PM.
+
+“The best part of a meetup like this is the hallway after. So come find me. I want to hear what you’d route.
+
+“Thank you.”
+
+Leave this slide up during questions."><span class="eyebrow reveal">Questions?</span><h1 class="reveal">Thank you.</h1><div class="qr-grid reveal"><a class="qr-card" href="https://github.com/bharadwaj-pendyala/beyond-llms-demo" target="_blank" rel="noopener noreferrer" aria-label="Open the beyond-llms-demo GitHub repository"><img src="./demo-qr.svg" alt="QR code for the beyond-llms-demo GitHub repository"><span><span class="k">Demo code + mod</span><h3>beyond-llms-demo</h3><p>Triage, jev-router, and npm run color</p></span></a><a class="qr-card" href="https://bharad.dev" target="_blank" rel="noopener noreferrer" aria-label="Open Bharadwaj Pendyala's portfolio"><img src="./portfolio-qr.svg" alt="QR code for bharad.dev"><span><span class="k">Deck and talks</span><h3>bharad.dev</h3><p>This deck and the harness engineering talk.</p></span></a></div></section></main>
+<div class="footer"><span class="brand"><span class="sq"></span>Beyond LLMs</span><span class="count">01 / 25</span></div>
+<div class="hint">Arrow keys to navigate / <kbd>N</kbd> notes / <kbd>F</kbd> fullscreen</div>
+<aside class="notes"><div class="nh">Speaker notes</div><div class="nb"></div></aside>
+<script>/* ============================================================
+   Pure navigation logic for the deck — no DOM.
+   Isolated here so it can be unit-tested (see nav.test.js).
+   ============================================================ */
+
+function clampIndex(n, count) {
+  if (count <= 0) return 0;
+  return Math.max(0, Math.min(count - 1, n));
+}
+
+function progressPct(index, count) {
+  if (count <= 1) return 100;
+  return (index / (count - 1)) * 100;
+}
+
+function counterLabel(index, count) {
+  const pad = (x) => String(x).padStart(2, '0');
+  return pad(index + 1) + ' / ' + pad(count);
+}
+
+function indexFromHash(hash, count) {
+  const n = parseInt(String(hash || '').replace('#', ''), 10);
+  if (isNaN(n)) return null;
+  return clampIndex(n - 1, count);
+}
+
+// Map a keyboard key to a navigation intent.
+function keyIntent(key) {
+  switch (key) {
+    case 'ArrowRight': case ' ': case 'PageDown': case 'j': return 'next';
+    case 'ArrowLeft': case 'PageUp': case 'k': return 'prev';
+    case 'Home': return 'first';
+    case 'End': return 'last';
+    case 'n': case 'N': case 's': case 'S': return 'notes';
+    case 'f': case 'F': return 'fullscreen';
+    default: return null;
+  }
+}
+
+// Given a horizontal click position (0..1), which direction? left 28% = prev.
+function clickIntent(xRatio) {
+  return xRatio < 0.28 ? 'prev' : 'next';
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { clampIndex, progressPct, counterLabel, indexFromHash, keyIntent, clickIntent };
+}
+</script>
+<script>window.__nav = { clampIndex, progressPct, counterLabel, indexFromHash, keyIntent, clickIntent };</script>
+<script>/* ============================================================
+   Deck engine — DOM controller. Uses pure logic from nav.js.
+   Keyboard nav, progress, speaker notes, deep-link, touch.
+   Zero build step, zero dependencies.
+   ============================================================ */
+(function () {
+  // nav.js is loaded as a plain script before this file; grab from module or globals.
+  const N = (typeof module !== 'undefined' && module.exports) ? require('./nav.js') : window.__nav || {};
+  const clampIndex = N.clampIndex || ((n, c) => Math.max(0, Math.min(c - 1, n)));
+  const progressPct = N.progressPct || ((i, c) => (c <= 1 ? 100 : (i / (c - 1)) * 100));
+  const counterLabel = N.counterLabel || ((i, c) => (i + 1) + ' / ' + c);
+  const indexFromHash = N.indexFromHash;
+  const keyIntent = N.keyIntent;
+  const clickIntent = N.clickIntent;
+
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const progress = document.querySelector('.progress');
+  const counter = document.querySelector('.footer .count');
+  const notes = document.querySelector('.notes');
+  const notesBody = document.querySelector('.notes .nb');
+  const hint = document.querySelector('.hint');
+  const count = slides.length;
+  let i = 0;
+  let notesOn = false;
+
+  function render() {
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+    if (progress) progress.style.width = progressPct(i, count) + '%';
+    if (counter) counter.textContent = counterLabel(i, count);
+    if (notesOn) renderNotes();
+    const target = '#' + (i + 1);
+    if (location.hash !== target) history.replaceState(null, '', target);
+  }
+
+  function renderNotes() {
+    const note = slides[i].getAttribute('data-notes') || 'No notes for this slide.';
+    if (notesBody) notesBody.textContent = note;
+  }
+
+  function go(n) { i = clampIndex(n, count); render(); }
+  function next() { go(i + 1); }
+  function prev() { go(i - 1); }
+  function toggleNotes() { notesOn = !notesOn; notes.classList.toggle('show', notesOn); if (notesOn) renderNotes(); }
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+
+  function dispatch(intent) {
+    switch (intent) {
+      case 'next': next(); break;
+      case 'prev': prev(); break;
+      case 'first': go(0); break;
+      case 'last': go(count - 1); break;
+      case 'notes': toggleNotes(); break;
+      case 'fullscreen': toggleFullscreen(); break;
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    const intent = keyIntent ? keyIntent(e.key) : null;
+    if (intent) { dispatch(intent); e.preventDefault(); }
+  });
+
+  document.querySelector('.deck').addEventListener('click', (e) => {
+    if (e.target.closest('a, button, .notes')) return;
+    dispatch(clickIntent ? clickIntent(e.clientX / window.innerWidth) : 'next');
+  });
+
+  let touchX = null;
+  document.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) dispatch(dx < 0 ? 'next' : 'prev');
+    touchX = null;
+  }, { passive: true });
+
+  if (indexFromHash) {
+    const fromHash = indexFromHash(location.hash, count);
+    if (fromHash !== null) i = fromHash;
+  }
+
+  let hintTimer = setTimeout(() => hint && hint.classList.add('hidden'), 5000);
+  document.addEventListener('keydown', () => { hint && hint.classList.add('hidden'); clearTimeout(hintTimer); }, { once: true });
+
+  render();
+})();
+</script>
+</body></html>

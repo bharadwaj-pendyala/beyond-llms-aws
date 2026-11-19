@@ -1,0 +1,14 @@
+{
+  "name": "beyond-llms-demo",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=23.6"
+  },
+  "scripts": {
+    "llm": "node --no-warnings 1-llm.ts",
+    "jev": "node --no-warnings 2-jev.ts",
+    "route": "node --no-warnings 4-route.ts",
+    "color": "node --no-warnings color.ts"
+  }
+}
