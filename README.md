@@ -1,6 +1,6 @@
 # beyond-llms-aws
 
-Demo code from my talk "Beyond LLMs: Decision Models for Smarter AI Agents" at AWS User Group DFW, Nov 19, 2026. The slides are at [bharad.dev/talks](https://bharad.dev/talks).
+Demo code from my talk "Beyond LLMs: Decision Models for Smarter AI Agents" at AWS User Group DFW, Nov 19, 2026. The slides are at [bharad.dev/decks/beyond-llms](https://bharad.dev/decks/beyond-llms/index.html#1).
 
 Here's the agent. Someone stops by a conference booth, a rep types a one-line note, and the agent writes the follow-up email for the account executive (AE). The interesting part isn't the email. It's everything around it: most steps in this agent pick from a short list, and an LLM is the wrong tool for picking from a list.
 
