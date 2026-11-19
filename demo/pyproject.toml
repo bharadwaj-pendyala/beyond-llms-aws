@@ -1,0 +1,20 @@
+[project]
+name = "beyond-llms-outreach"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = ["strands-agents[anthropic]", "boto3[crt]"]
+
+[dependency-groups]
+dev = ["pytest", "ruff", "cfn-lint"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "scripts"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint.isort]
+known-first-party = ["agent", "app", "approve", "common", "crm", "jev", "mail", "policy", "runs"]

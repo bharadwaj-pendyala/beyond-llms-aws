@@ -1,2 +1,9 @@
-node_modules
+.venv/
+.aws-sam/
+.cache/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+samconfig.toml
+uv.lock
 .env

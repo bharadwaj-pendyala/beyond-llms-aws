@@ -1,0 +1,131 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Beyond LLMs demo. An outreach agent on AWS that asks Jev before it acts.
+
+Parameters:
+  AeEmail:
+    Type: String
+    Description: The account executive. Sends the follow-ups, gets a copy, and approves drafts. SES verifies it.
+  CustomerEmail:
+    Type: String
+    Default: success@simulator.amazonses.com
+    Description: Every follow-up goes here instead of the fictional lead address. The default is the SES mailbox simulator.
+  ModelProvider:
+    Type: String
+    Default: anthropic
+    AllowedValues: [anthropic, bedrock]
+    Description: Which model the agent writes with. Use bedrock once the account has Bedrock quota.
+  ModelId:
+    Type: String
+    Default: us.amazon.nova-lite-v1:0
+    Description: Bedrock model or inference profile, used when ModelProvider is bedrock. It must support tool use.
+  AnthropicModel:
+    Type: String
+    Default: claude-opus-5-5
+    Description: Claude model, used when ModelProvider is anthropic.
+  AnthropicKeyParam:
+    Type: String
+    Default: /beyond-llms/anthropic-api-key
+    Description: SSM SecureString that holds the Anthropic API key. scripts/setup.py creates it.
+  JevKeyParam:
+    Type: String
+    Default: /beyond-llms/typesafe-api-key
+    Description: SSM SecureString that holds the TypeSafe API key. scripts/setup.py creates it.
+
+Globals:
+  Function:
+    Runtime: python3.13
+    Architectures: [arm64]
+    CodeUri: src/
+
+Resources:
+  CrmTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - { AttributeName: pk, AttributeType: S }
+        - { AttributeName: sk, AttributeType: S }
+      KeySchema:
+        - { AttributeName: pk, KeyType: HASH }
+        - { AttributeName: sk, KeyType: RANGE }
+
+  RunsTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey: { Name: leadId, Type: String }
+
+  AppFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: app.handler
+      Timeout: 120
+      MemorySize: 1024
+      Environment:
+        Variables:
+          CRM_TABLE: !Ref CrmTable
+          RUNS_TABLE: !Ref RunsTable
+          AE_EMAIL: !Ref AeEmail
+          CUSTOMER_EMAIL: !Ref CustomerEmail
+          MODEL_PROVIDER: !Ref ModelProvider
+          MODEL_ID: !Ref ModelId
+          ANTHROPIC_MODEL: !Ref AnthropicModel
+          JEV_KEY_PARAM: !Ref JevKeyParam
+          ANTHROPIC_KEY_PARAM: !Ref AnthropicKeyParam
+          APPROVE_URL: !GetAtt ApproveFunctionUrl.FunctionUrl
+      Policies:
+        - DynamoDBReadPolicy: { TableName: !Ref CrmTable }
+        - DynamoDBCrudPolicy: { TableName: !Ref RunsTable }
+        - Statement:
+            - Effect: Allow
+              Action: ssm:GetParameter
+              Resource:
+                - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${JevKeyParam}
+                - !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${AnthropicKeyParam}
+            - Effect: Allow
+              Action: [bedrock:InvokeModel, bedrock:InvokeModelWithResponseStream]
+              Resource:
+                - arn:aws:bedrock:*::foundation-model/*
+                - !Sub arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/*
+            - Effect: Allow
+              Action: ses:SendEmail
+              Resource: !Sub arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/*
+
+  ApproveFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: approve.handler
+      Timeout: 10
+      FunctionUrlConfig:
+        AuthType: NONE
+      Environment:
+        Variables:
+          RUNS_TABLE: !Ref RunsTable
+      Policies:
+        - DynamoDBCrudPolicy: { TableName: !Ref RunsTable }
+        - Statement:
+            - Effect: Allow
+              Action: [states:SendTaskSuccess, states:SendTaskFailure]
+              Resource: '*'
+
+  OutreachStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      Type: STANDARD
+      DefinitionUri: statemachine/outreach.asl.json
+      DefinitionSubstitutions:
+        AppFunctionArn: !GetAtt AppFunction.Arn
+      Policies:
+        - LambdaInvokePolicy: { FunctionName: !Ref AppFunction }
+
+Outputs:
+  StateMachineArn:
+    Value: !Ref OutreachStateMachine
+  CrmTable:
+    Value: !Ref CrmTable
+  RunsTable:
+    Value: !Ref RunsTable
+  AppFunction:
+    Value: !Ref AppFunction
+  ApproveUrl:
+    Value: !GetAtt ApproveFunctionUrl.FunctionUrl

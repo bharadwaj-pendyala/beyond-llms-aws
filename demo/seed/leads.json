@@ -1,0 +1,27 @@
+[
+  {
+    "id": "L-1",
+    "email": "dana@lonestar.example",
+    "note": "Came by after the Bedrock talk. Wants pricing for the Team plan before their Q1 budget review."
+  },
+  {
+    "id": "L-2",
+    "email": "raj@pecan.example",
+    "note": "Liked the demo. Asked if we can beat their current vendor on price, and if SSO lands before their March renewal. Maybe a call?"
+  },
+  {
+    "id": "L-3",
+    "email": "sam@trinity.example",
+    "note": "Grabbed a sticker and a t-shirt."
+  },
+  {
+    "id": "L-4",
+    "email": "lee@mesquite.example",
+    "note": "Wants a call next week about the media workflow."
+  },
+  {
+    "id": "L-5",
+    "email": "maria@bluebonnet.example",
+    "note": "Asked for a 30 minute call with a solutions engineer about moving their batch jobs to Step Functions."
+  }
+]

@@ -603,6 +603,16 @@ th:first-child,td:first-child { padding-left:0; }
 .event-title > * { max-width: none; }
 .event-lockup .event-name { color: var(--blue); }
 .gen-ink { color: var(--orange); }
+/* ---------- beyond-llms title slide ---------- */
+.slide.title-slide.active { display: grid; grid-template-rows: auto 1fr auto; padding-bottom: calc(var(--pad) + 2.5rem); }
+.title-slide .ts-event { font-family: var(--mono); font-weight: 600; font-size: clamp(1rem, 1.7vw, 1.6rem); letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); }
+.title-slide .ts-main { align-self: center; }
+.title-slide h1 { font-size: clamp(4.2rem, 12.5vw, 13rem); line-height: 0.92; letter-spacing: -0.05em; max-width: none; }
+.title-slide .ts-sub { margin-top: 1.8rem; font-size: clamp(1.4rem, 2.8vw, 2.6rem); line-height: 1.2; color: var(--ink-2); max-width: 26ch; }
+.title-slide .ts-meta { justify-self: end; text-align: right; display: flex; flex-direction: column; gap: 0.35rem; }
+.title-slide .ts-meta p { font-size: var(--type-detail); color: var(--ink-3); line-height: 1.4; }
+.title-slide .ts-meta .ts-name { font-size: clamp(1.25rem, 2vw, 1.9rem); font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+@media (max-width: 900px) { .slide.title-slide.active { padding-bottom: 6rem; } }
 .flow .node.decide { border-color: var(--blue); background: var(--blue-soft); }
 .flow .node.decide .n-k { color: var(--blue); }
 .flow .node.gen { border-color: var(--orange); background: var(--orange-soft); }
@@ -615,59 +625,94 @@ td.ok-ink { color: var(--aqua); }
 .split .codeblock pre { font-size: clamp(0.8rem, 1.05vw, 1.05rem); white-space: pre; overflow-x: auto; }
 @media (max-width: 900px) { .flow.trace { display: grid; grid-template-columns: 1fr 1fr; } }
 .big-list { font-size: var(--type-body); gap: 1.2rem; display: flex; flex-direction: column; margin-top: 2rem; }
+/* ---------- architecture slide: AWS reference style ---------- */
+/* the figure width follows the 1200:540 viewBox, so the legend lines up with the diagram when height is the limit */
+.awsarch { margin-top: 1.4rem; width: min(100%, max(520px, calc((100vh - 2 * var(--pad) - 10.5rem) * 2.2222))); }
+.awsarch > svg { display: block; width: 100%; height: auto; }
+.awsarch text { font-family: var(--mono); }
+.awsarch .aa-zone { fill: var(--surface); stroke: var(--hairline); }
+.awsarch .aa-cloud { fill: none; stroke: var(--ink-3); stroke-width: 1.2; }
+.awsarch .aa-region { fill: none; stroke: var(--ink-3); stroke-dasharray: 5 4; }
+.awsarch .aa-zk { fill: var(--ink-2); font-size: 11px; font-weight: 700; letter-spacing: 0.14em; }
+.awsarch .aa-zv { font-weight: 400; letter-spacing: 0.02em; }
+.awsarch .aa-sn { fill: var(--ink); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-anchor: middle; }
+.awsarch .aa-rs { fill: var(--ink-3); font-size: 10px; text-anchor: middle; }
+.awsarch .aa-cmd { fill: var(--ink); font-size: 11px; font-weight: 600; }
+.awsarch .aa-al { fill: var(--ink-2); font-family: var(--sans); font-size: 11px; }
+.awsarch .aa-l { text-anchor: start; }
+.awsarch .aa-end { text-anchor: end; }
+.awsarch .aa-mid { text-anchor: middle; }
+.awsarch .aa-nt { fill: var(--surface-2); stroke: var(--hairline); }
+.awsarch .aa-gl { fill: none; stroke: var(--ink-2); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.awsarch .aa-thin { stroke-width: 1.4; }
+.awsarch .aa-ar { fill: none; stroke: var(--ink-2); stroke-width: 1.5; stroke-linejoin: round; }
+.awsarch .aa-rec { stroke: var(--ink-3); stroke-dasharray: 1.5 4; stroke-linecap: round; }
+.awsarch .aa-opt { stroke-dasharray: 6 4; }
+.awsarch .aa-head, .awsarch .aa-jn { fill: var(--ink-2); }
+.awsarch .aa-dim { fill: var(--ink-3); }
+.awsarch .aa-pill { fill: var(--page); stroke: var(--hairline); }
+.awsarch .aa-badge circle { fill: var(--blue); }
+.awsarch .aa-badge text { fill: var(--ink); font-size: 10.5px; font-weight: 700; text-anchor: middle; }
+.awsarch .aa-badge text.aa-sm { font-size: 9px; }
+.awsarch .chart-legend { margin-top: 0.8rem; gap: 0.6rem 1.2rem; }
+.awsarch .chart-legend .item { font-size: 0.85rem; }
+.awsarch .chart-legend svg { flex: none; overflow: visible; }
+@media print { .awsarch { width: min(100%, 890px); } }
 </style></head>
 <body><noscript>This presentation requires JavaScript for navigation.</noscript>
 <div class="progress"></div><div class="glow a"></div><div class="glow b"></div>
-<main class="deck"><section class="slide statement event-title active" aria-label="Slide 1: Beyond LLMs" data-notes="0:00 to 0:30. Slot: 6:30 to 8:00 PM, Frisco Library. Talk runs about 45 minutes, then Q&amp;A.
+<main class="deck"><section class="slide title-slide active" aria-label="Slide 1: Beyond LLMs" data-notes="0:00 to 0:30. Slot: 6:30 to 8:00 PM, Frisco Library. Talk runs about 45 minutes, then Q&amp;A.
 
 Don’t introduce yourself yet. Go straight to the next slide and ask the question. The bio comes after the room is already thinking.
 
-Before you start: font size up in the terminal, light theme if the projector washes out dark."><div class="event-lockup reveal"><span class="event-name">AWS User Group DFW</span><span class="event-city">Frisco</span></div><h1 class="reveal">Beyond <span class="accent">LLMs</span></h1><p class="sub reveal">Decision models for smarter AI agents</p><p class="byline reveal">Bharadwaj Pendyala</p></section>
+Before you start: font size up in the terminal, light theme if the projector washes out dark."><div class="ts-group reveal"><span class="ts-event">AWS User Group DFW</span></div><div class="ts-main reveal"><h1>Beyond <span class="accent">LLMs</span></h1><p class="ts-sub">Decision models for smarter AI agents</p></div><div class="ts-meta reveal"><p class="ts-name">Bharadwaj Pendyala</p><p>Frisco, TX · Nov 19, 2026</p></div></section>
 <section class="slide statement" aria-label="Slide 2: A question for the room" data-notes="0:30 to 2:00.
 
-“Quick show of hands. Who here has an agent, or a pipeline with an LLM in it, running somewhere? Keep them up. Now keep it up if one of the steps in there returns a single word, like ‘billing’ or ‘yes’.
+“Quick show of hands. Who here has an agent, or any pipeline with an LLM in it, running somewhere? Keep them up.
+
+“Now keep your hand up if one of its steps asks the LLM to pick from a short list. Which team owns this ticket. Is it urgent. Is this lead worth an email. Yes or no.
 
 “Yeah. Most of the hands stayed up, right?
 
-“So that’s what I want to poke at tonight. We are paying a model that can write a novel to tell us the word ‘billing’. And we wait ten seconds for it. And then we write a regex to find the word in its answer.”
+“So that’s what I want to poke at tonight. To get one word from a list, we call a model that can write a novel. We wait seconds for it. Then we write code to dig the word out of its answer.”
 
-Wait for the laugh. Then go."><div class="reveal"><span class="eyebrow">Hands up</span></div><h1 class="reveal">Who has an agent that waits ten seconds to say <span class="accent">“billing”</span>?</h1></section>
+Wait for the laugh. Then go."><div class="reveal"><span class="eyebrow">Hands up</span></div><h1 class="reveal">Who has an agent that calls an LLM <span class="accent">just to pick from a list</span>?</h1><p class="sub reveal">Which team? Is it urgent? Yes or no? And it waits seconds for every answer.</p></section>
 <section class="slide" aria-label="Slide 3: One agent run, colored in" data-notes="2:00 to 4:00.
 
-“Here is one run of a support agent. A refund ticket comes in. Let’s walk the steps and color each one.
+“Here is one run of an agent that follows up with people who stopped by a conference booth. It writes to them on behalf of the account executive, the AE. Let’s walk the steps and color each one.
 
-“Which team owns this? That’s a decision. Is it urgent? Decision. Does the customer want money back? Decision. Which tool do I call next? Decision. Look up the order. That’s plain code, no model needed. Was it a duplicate charge? Decision. Write the reply. Finally, that one actually needs words.
+“Is this person on the do-not-contact list? That’s a lookup. Code. What are they asking for? Decision. Is it worth an email at all? Decision. Look up the account. Code. Write the email. That one needs words. Does the email promise a discount or a date? Decision. Send it, or ask the AE first? Decision.
 
-“Six model calls. One of them produces prose. Five of them pick from a short list.
+“Seven steps. Four decisions, two lookups, and one step that needs prose.
 
 “Here’s the rule I used to color them. If you could write down every possible answer today, it’s a decision. If the answer is new text, it’s generate. If plain code can do it, it’s code.
 
-“Most of the steps in an agent are decisions. Keep that picture in your head, because the rest of the talk hangs off it. And you don’t have to color yours by hand. There’s a script for it at the end.”"><span class="eyebrow reveal">One agent run</span><h2 class="reveal">Color every step: <span class="accent">decide</span> or <span class="gen-ink">generate</span></h2>
-<div class="flow trace reveal"><div class="node decide"><span class="n-k">decide</span><span class="n-t">Which team?</span></div><div class="node decide"><span class="n-k">decide</span><span class="n-t">Urgent?</span></div><div class="node decide"><span class="n-k">decide</span><span class="n-t">Wants a refund?</span></div><div class="node decide"><span class="n-k">decide</span><span class="n-t">Next tool?</span></div><div class="node code"><span class="n-k">code</span><span class="n-t">Look up order</span></div><div class="node decide"><span class="n-k">decide</span><span class="n-t">Duplicate charge?</span></div><div class="node gen"><span class="n-k">generate</span><span class="n-t">Write the reply</span></div></div>
-<p class="aside reveal">The rule: if you could write down every possible answer today, it’s a decision. Six model calls here, and only one needs prose.</p></section>
+“Hold on to this picture. It’s the agent we build on AWS tonight. And you don’t have to color yours by hand. There’s a script for it at the end.”"><span class="eyebrow reveal">One agent run</span><h2 class="reveal">Color every step: <span class="accent">decide</span> or <span class="gen-ink">generate</span></h2>
+<div class="flow trace reveal"><div class="node code"><span class="n-k">code</span><span class="n-t">Do-not-contact?</span></div><div class="node decide"><span class="n-k">decide</span><span class="n-t">What do they want?</span></div><div class="node decide"><span class="n-k">decide</span><span class="n-t">Worth an email?</span></div><div class="node code"><span class="n-k">code</span><span class="n-t">Look up account</span></div><div class="node gen"><span class="n-k">generate</span><span class="n-t">Write the email</span></div><div class="node decide"><span class="n-k">decide</span><span class="n-t">Promises anything?</span></div><div class="node decide"><span class="n-k">decide</span><span class="n-t">Send or ask the AE?</span></div></div>
+<p class="aside reveal">The rule: if you could write down every possible answer today, it’s a decision. Seven steps here, and only one needs prose.</p></section>
 <section class="slide" aria-label="Slide 4: Who's talking" data-notes="4:00 to 4:30.
 
-“I’m Bharadwaj. I’m a Lead Member of Technical Staff at Salesforce, and I build the tooling around agents. Slides and code are linked at the end, so don’t bother taking photos.
+“I’m Bharadwaj Pendyala, a tech lead at Salesforce. I build enterprise workflow systems and the tooling around agents. Slides and demo code are linked at the end, so no need to take photos.”
 
-“One more thing. This is education, not a pitch. I’ll talk about two vendors tonight, because they are the two shipping this today. Same idea, two spellings. The demos use one of them, Jev, to keep things short.”
+Keep this to thirty seconds. Point to the links without reading them aloud.
 
-TODO before Thursday: if you have any relationship with TypeSafe or OpenAI beyond being a customer, say so here in one sentence."><div class="split"><div><div class="reveal"><span class="eyebrow">Who’s talking</span></div><h2 class="reveal">Bharadwaj<br>Pendyala</h2><p class="lead reveal">Lead Member of Technical Staff at Salesforce. I build the tooling around agents.</p><p class="reveal muted aside">Education, not a pitch. Two vendors, one idea.</p></div><div><ul class="contact reveal"><li><span class="c-k">Slides</span><a href="https://bharad.dev/talks" target="_blank" rel="noopener noreferrer">bharad.dev/talks</a></li><li><span class="c-k">LinkedIn</span><a href="https://www.linkedin.com/in/bharadwajpendyala/" target="_blank" rel="noopener noreferrer">in/bharadwajpendyala</a></li><li><span class="c-k">GitHub</span><a href="https://github.com/bharadwaj-pendyala" target="_blank" rel="noopener noreferrer">bharadwaj-pendyala</a></li><li><span class="c-k">X</span><a href="https://x.com/bharadwaj_py" target="_blank" rel="noopener noreferrer">@bharadwaj_py</a></li></ul></div></div></section>
+If you have any relationship with TypeSafe or OpenAI beyond being a customer, say so here in one sentence."><div class="split"><div><div class="reveal"><span class="eyebrow"><span class="emoji slide-icon" aria-hidden="true">👋</span> Who's talking</span></div><h2 class="reveal">Bharadwaj<br>Pendyala</h2><p class="lead reveal">Tech Lead at Salesforce. I work on enterprise workflow systems and the tooling around agents.</p><p class="reveal muted aside">Slides and demo code are linked at the end.</p></div><div><ul class="contact reveal"><li><span class="c-k"><svg xmlns="http://www.w3.org/2000/svg" class="contact-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path fill-rule="evenodd" d="M8 0a.5.5 0 0 1 .447.276L8.81 1h4.69A1.5 1.5 0 0 1 15 2.5V11h.5a.5.5 0 0 1 0 1h-2.86l.845 3.379a.5.5 0 0 1-.97.242L12.11 14H3.89l-.405 1.621a.5.5 0 0 1-.97-.242L3.36 12H.5a.5.5 0 0 1 0-1H1V2.5A1.5 1.5 0 0 1 2.5 1h4.691l.362-.724A.5.5 0 0 1 8 0M2 11h12V2.5a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5zm9.61 1H4.39l-.25 1h7.72z"/></svg>Slides</span><a href="https://bharad.dev/talks" target="_blank" rel="noopener noreferrer">bharad.dev/talks</a></li><li><span class="c-k"><svg xmlns="http://www.w3.org/2000/svg" class="contact-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z"/></svg>LinkedIn</span><a href="https://www.linkedin.com/in/bharadwajpendyala/" target="_blank" rel="noopener noreferrer">in/bharadwajpendyala</a></li><li><span class="c-k"><svg xmlns="http://www.w3.org/2000/svg" class="contact-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/></svg>GitHub</span><a href="https://github.com/bharadwaj-pendyala" target="_blank" rel="noopener noreferrer">bharadwaj-pendyala</a></li><li><span class="c-k"><svg xmlns="http://www.w3.org/2000/svg" class="contact-icon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/></svg>X</span><a href="https://x.com/bharadwaj_py" target="_blank" rel="noopener noreferrer">@bharadwaj_py</a></li></ul></div></div></section>
 <section class="slide" aria-label="Slide 5: The tax we pay today" data-notes="6:00 to 8:00.
 
 “So what does it cost to answer a decision with an LLM? Three things.
 
 “Time. I ran six tickets through Claude Haiku with claude -p on my laptop. About ten seconds each. To be fair, that includes the CLI starting up, so the raw API is faster. But it’s still seconds, not milliseconds. Multiply that by five decisions per run.
 
-“Strings. The model gives you text. Your code has to find the JSON in it, parse it, and hope the field names are right. Here’s the line from my demo that does it. A regex. In 2026.
+“Strings. The model gives you text. Your code has to find the JSON in it, parse it, and hope the field names are right. Here’s the line from an earlier version of this demo that does it. A regex. In 2026.
 
 “And the confidence. Confidence is how sure the model is, from zero to one. I asked Haiku for it. It said ninety seven percent on one ticket and forty on another. But the model wrote that number as text, the same way it writes any other word. Nothing measured it. Research that asks models to state their confidence finds those numbers tend to run high. You could read token probabilities instead, but the Claude API doesn’t expose them.
 
 “To be fair, Haiku’s forty percent on the vague ticket was a sensible answer. The problem is that you can’t tell when to trust the number.”
 
-The ~10 s figure is from the Nov 17 run of 1-llm.ts (9.7 to 10.3 s). Re-run at the venue.
+The ~10 s figure is from the Nov 17 run of the earlier ticket demo, 1-llm.ts (9.7 to 10.3 s). That code is in the pre-AWS backup.
 
 Source for overconfidence: Xiong et al., 2023, “Can LLMs Express Their Uncertainty?”, arXiv 2306.13063."><span class="eyebrow reveal">The tax</span><h2 class="reveal">What a decision costs on an LLM</h2>
-<div class="grid cols-3 reveal"><div class="card stat"><span class="num orange">~10s</span><span class="lbl">per ticket, Haiku via <code>claude -p</code> on my laptop (includes CLI startup)</span></div><div class="card"><span class="k danger">Strings</span><div class="codeblock mini"><pre>reply.match(<span class="bad">/\{[\s\S]*\}/</span>)</pre></div><p>Find the JSON in the prose. Hope the fields are right.</p></div><div class="card"><span class="k danger">Self-reported confidence</span><p>“97% sure.” The model writes that number as text. Nothing measures it.</p></div></div></section>
+<div class="grid cols-3 reveal"><div class="card stat"><span class="num orange">~10s</span><span class="lbl">to sort one support ticket with three list questions. Claude Haiku via <code>claude -p</code> on my laptop, CLI startup included.</span></div><div class="card"><span class="k danger">Strings</span><div class="codeblock mini"><pre>reply.match(<span class="bad">/\{[\s\S]*\}/</span>)</pre></div><p>Find the JSON in the prose. Hope the fields are right.</p></div><div class="card"><span class="k danger">Self-reported confidence</span><p>“97% sure.” The model writes that number as text. Nothing measures it.</p></div></div></section>
 <section class="slide statement" aria-label="Slide 6: The idea" data-notes="8:00 to 8:20.
 
 “So here’s the whole talk in one line. If a step’s answer comes from a short list, don’t pay for prose.”
@@ -713,16 +758,16 @@ Pause. Let it land."><div class="reveal"><span class="eyebrow">The idea</span></
 
 “There are basically four question types. The names differ by vendor, which is annoying, so I put both.
 
-“Choice: pick one from a list. Which team, or which model.
+“Choice: pick one from a list. Which team owns this, or what a lead is asking for.
 
-“Score: a position on an ordered scale. Urgency from ‘can wait’ to ‘blocked right now’. You get back a number like 1.7, which means ‘mostly blocked, a bit of today’. That in-between number is useful.
+“Score: a position on an ordered scale. Urgency from 0, ‘can wait’, to 2, ‘blocked right now’. You get back a number like 1.7, which means ‘mostly blocked, a bit of today’. That in-between number is useful.
 
 “Yes or no: TypeSafe calls it a noul, OpenAI calls it a predicate. You get the probability that the statement is true.
 
 “And box: find something in an image. Only Jev has that one today, and it’s marked experimental.
 
 “If you squint, most agent decisions are one of the first three.”"><span class="eyebrow reveal">The building blocks</span><h2 class="reveal">Four question types</h2>
-<div class="grid cols-4 reveal"><div class="card"><span class="k">Choice</span><h3>One of a list</h3><p>Which team? Which model?</p></div><div class="card"><span class="k">Score</span><h3>Where on a scale</h3><p>How urgent? Returns 1.7, not just “high”.</p></div><div class="card"><span class="k">Yes or no</span><h3>How likely true</h3><p>Jev: <code>noul</code>. OpenAI: <code>predicate</code>.</p></div><div class="card"><span class="k">Box</span><h3>Where in an image</h3><p>Jev only, experimental.</p></div></div></section>
+<div class="grid cols-4 reveal"><div class="card"><span class="k">Choice</span><h3>One of a list</h3><p>Which team? What does the lead want?</p></div><div class="card"><span class="k">Score</span><h3>Where on a scale</h3><p>How urgent, from 0 to 2? Returns 1.7, not just “high”.</p></div><div class="card"><span class="k">Yes or no</span><h3>How likely true</h3><p>Does the draft promise a discount? Jev: <code>noul</code>. OpenAI: <code>predicate</code>.</p></div><div class="card"><span class="k">Box</span><h3>Where in an image</h3><p>Jev only, experimental.</p></div></div></section>
 <section class="slide" aria-label="Slide 10: Example one, Jev" data-notes="13:30 to 15:30.
 
 “First example. Jev, from a startup called TypeSafe. Their founder came from OpenAI. They trained it with a method they call RLCD, reinforcement learning for calibrated decisions. It’s in the corner of the slide.
@@ -782,103 +827,146 @@ Sources: developers.openai.com/api/docs/guides/decisions. GA date from the OpenA
 
 “This is the same idea as the harness talk I gave at ACM in August. The model is the engine. The harness is the car. Decision models are a really cheap part you can bolt onto the car.
 
-“Is this clear? Good, because next we run it.”"><span class="eyebrow reveal">The architecture</span><h2 class="reveal">LLM plans. Decision model branches. Code sets the line.</h2>
+“Is this clear? Good, because next we build it on AWS.”"><span class="eyebrow reveal">The architecture</span><h2 class="reveal">LLM plans. Decision model branches. Code sets the line.</h2>
 <div class="arch-row reveal"><div class="flow"><div class="node gen"><span class="n-k">system 2</span><span class="n-t">LLM plans the steps</span></div><div class="arrow">→</div><div class="node decide"><span class="n-k">system 1</span><span class="n-t">Decision model at each branch</span></div><div class="arrow">→</div><div class="node code"><span class="n-k">code</span><span class="n-t">Confidence check</span></div></div>
 <div class="grid cols-3 outcomes"><div class="card"><span class="k ok">Sure enough</span><p>Act on it.</p></div><div class="card"><span class="k">Not sure</span><p>Ask the LLM to think it through.</p></div><div class="card"><span class="k danger">Risky or lost</span><p>A person decides.</p></div></div></div></section>
-<section class="slide statement" aria-label="Slide 13: Demo one" data-notes="18:00 to 25:00. Demo 1, about seven minutes.
+<section class="slide statement" aria-label="Slide 13: Tonight’s agent" data-notes="18:00 to 18:30.
 
-Setup before the talk: cd ~/Documents/Github/beyond-llms-demo. TYPESAFE_API_KEY exported. Run every step once at the venue so .cache/ is fresh. If the Wi-Fi dies, every step replays from .cache/ and prints ‘offline, replaying’.
+“Enough theory. Let’s build the agent from slide three. It follows up with people who visited a booth, on behalf of an account executive.
 
-1. Open tickets.ts. Read T-1042 (the refund) and T-1047 (‘third time I am writing’) aloud. (30 sec)
-2. npm run llm. Let it crawl. Say: “While this runs, look at parseTriage. That regex is load-bearing.” (1 min)
-3. npm run jev. Point at the ms column. (1 min)
-4. Open 4-route.ts. Eight lines. Code owns the line: SURE_ENOUGH = 0.8. (1 min)
-5. npm run route. T-1047 should go to the human queue. That’s the planned failure: “Neither engine can tell what this person is angry about. Good. It shouldn’t guess. It told us it doesn’t know, and the code listened.” (2 min)
-In testing, Jev put T-1047 at 41% to 68%. Run it twice if you want to show that confidence moves a little.
-6. If T-1047 does NOT go to the human queue, that is also a lesson: raise SURE_ENOUGH live to 0.9 and run again. Say: “The threshold is a product decision, not a model decision.”"><div class="reveal"><span class="eyebrow">Live</span></div><h1 class="reveal">Demo 1: triage six tickets</h1><p class="sub reveal">Same three questions. An LLM, then Jev.</p></section>
-<section class="slide" aria-label="Slide 14: What you just saw" data-notes="25:00 to 26:30.
+“The sales part is only the setting. Watch where the decisions go, and what AWS does around them.”"><div class="reveal"><span class="eyebrow">Tonight’s agent</span></div><h1 class="reveal">The agent writes the email. <span class="accent">Jev decides if it should.</span></h1><p class="sub reveal">A booth follow-up agent for an account executive, built on AWS.</p></section>
+<section class="slide" aria-label="Slide 14: The agent on AWS" data-notes="18:30 to 21:00.
 
-“Let’s replay that. Fill these in with what actually happened on stage.
+“Here is the same run, on AWS. One Step Functions state machine. Read it left to right.
 
-“Same questions, two engines. The LLM took about ten seconds per ticket and handed us a string. Jev took about a tenth of a second and handed us values.
+“First, the do-not-contact check. Lambda reads a DynamoDB table. It’s a rule, so it’s code. Jev is never asked.
 
-“And the ticket where the person was just angry, with no detail. Both of them said ‘unclear’, and both were unsure. Good. A good system says ‘I don’t know’ there. The difference is that Jev’s number is trained to mean something, so the code can act on it.”
+“Second, Jev answers one choice question: what does this person want? Meeting, pricing, info, or unclear. With a probability for each option.
 
-Numbers from the Nov 17 run. Re-run at the venue and update if they change. If Jev was not faster in the room, say so plainly."><span class="eyebrow reveal">Replay</span><h2 class="reveal">What you just saw</h2>
-<div class="table-wrap reveal"><table><thead><tr><th scope="col"></th><th scope="col">LLM (Haiku)</th><th scope="col">Jev</th></tr></thead><tbody><tr><td>Time per ticket</td><td>~10 s*</td><td>85 to 180 ms</td></tr><tr><td>Output</td><td>A string to parse</td><td>Values</td></tr><tr><td>“Third time I am writing”</td><td>unclear, 40%, self-reported</td><td>unclear, 62%, sent to a person</td></tr></tbody></table></div>
-<p class="aside reveal">* Includes <code>claude -p</code> startup on a laptop.</p></section>
-<section class="slide statement" aria-label="Slide 15: Point it at your own tools" data-notes="26:30 to 27:00.
+“Third, if it’s worth an email, a Strands agent writes the draft. That’s the only step that generates text.
 
-“Tickets are the obvious example. Every vendor demo is ticket triage. So let’s point the same idea at something closer to home. The tool most of us have open right now.”"><div class="reveal"><span class="eyebrow">Closer to home</span></div><h1 class="reveal">Now point it at your <span class="accent">coding agent</span>.</h1></section>
-<section class="slide" aria-label="Slide 16: Picking a model is a chore" data-notes="27:00 to 28:30.
+“Fourth, Jev checks the draft. Does it promise a discount, a date, or a feature? That comes back as a probability.
 
-“Who uses Claude Code, or Codex, or Cursor? Who changes the model by hand during the day? Yeah. Me too.
+“Last, plain code reads both answers and picks a lane. Sure and clean, SES sends it. Not sure, or the draft promises something, the state machine pauses and the AE approves from their phone. Unclear, no email.
 
-“Renaming a variable on Opus is like hiring a structural engineer to hang a picture. And designing a new auth layer on Haiku is the other mistake. So you type /model, pick one, do the task, and forget to switch back. Then your agent spawns subagents, and they all just inherit whatever you picked.
+“Two calls to a decision model, one call to an agent, and code makes the call at the end.”"><span class="eyebrow reveal">On AWS</span><h2 class="reveal">One state machine. Two questions to Jev.</h2>
+<div class="arch-row reveal"><div class="flow trace"><div class="node code"><span class="n-k">code · DynamoDB</span><span class="n-t">Do-not-contact?</span></div><div class="node decide"><span class="n-k">decide · Jev</span><span class="n-t">What do they want?</span></div><div class="node gen"><span class="n-k">generate · Strands</span><span class="n-t">Agent writes the draft</span></div><div class="node decide"><span class="n-k">decide · Jev</span><span class="n-t">Promises anything?</span></div><div class="node code"><span class="n-k">code · Lambda</span><span class="n-t">Send or ask?</span></div></div>
+<div class="grid cols-3 outcomes"><div class="card"><span class="k ok">Sure and clean</span><p>SES sends it.</p></div><div class="card"><span class="k">Not sure</span><p>Step Functions waits. The AE approves from email.</p></div><div class="card"><span class="k danger">Unclear or opted out</span><p>No email.</p></div></div></div></section>
+<section class="slide" aria-label="Slide 15: How a booth lead flows through AWS" data-notes="About 2 minutes. The timings on later slides don’t include this slide yet. Go quicker on the next slide, since it names the same pieces.
 
-“Picking a model is a decision. A choice from three options. Sounds familiar?”"><span class="eyebrow reveal">The chore</span><h2 class="reveal">Picking a model is a decision. We make it by hand.</h2>
-<div class="grid cols-3 reveal"><div class="card"><span class="k">Haiku</span><h3>Rename a variable</h3><p>Read files, run a command, quick answers.</p></div><div class="card"><span class="k">Sonnet</span><h3>Add CSV export</h3><p>Everyday features, clear bugs, tests.</p></div><div class="card"><span class="k ok">Opus</span><h3>Design the auth layer</h3><p>Open-ended work, many files, bugs nobody understands.</p></div></div>
-<p class="aside reveal">And every subagent inherits whatever you picked last.</p></section>
-<section class="slide" aria-label="Slide 17: jev-router" data-notes="28:30 to 30:30.
+“Same run, drawn the way you’d draw it for an architecture review. Follow the blue numbers.
 
-“So I built jev-router. It’s a Claude Code mod, about a hundred lines in two files.
+“One. I type make run on my laptop. It starts one Step Functions execution per lead.
 
-“It hooks two moments. When you submit a prompt, it asks Jev one question: which model should do this? If Jev is sure enough, that prompt’s turn runs on that model. Your /model setting stays as it was. And it only routes prompts you type, not background notifications. And when the agent starts a subagent, it asks the same question about the subagent’s task and sets that subagent’s model.
+“Two. Step Functions calls the same Lambda function for every step. It passes the step name and the state so far.
 
-“Both hooks have a catch around them. If Jev is down, or you don’t have a key, nothing happens. Your prompt goes through like the mod isn’t there. A router should never be the reason your agent stops.”"><span class="eyebrow reveal">The mod</span><h2 class="reveal">jev-router: one question, two hooks</h2>
-<div class="grid cols-2 reveal"><div class="card"><span class="k">prompt.submit</span><h3>Your prompt</h3><p>Jev picks a model. If it’s sure enough, that turn runs on it. No <code>/model</code>.</p></div><div class="card"><span class="k">agent.spawn</span><h3>Every subagent</h3><p>Jev picks a model for the subagent’s task. The subagent starts on it.</p></div></div>
-<p class="aside reveal">No key, or Jev is down? The prompt goes through untouched.</p></section>
-<section class="slide" aria-label="Slide 18: The whole prompt" data-notes="30:30 to 31:30.
+“Three. The first step reads the contact from the CRM table in DynamoDB. If they opted out, the run stops right there.
 
-“And this is the whole prompt. Three lines of plain English, one per model. That’s the entire routing logic. No rules engine, no if-statements on keywords.
+“Four. Lambda pulls the API keys from Parameter Store. No keys in the code.
 
-“If you disagree with where I drew the lines, and you will, you edit three sentences.”"><div class="split"><div><span class="eyebrow reveal">The whole prompt</span><h2 class="reveal">The routing logic is three sentences</h2><p class="aside reveal">Disagree with the lines? Edit the sentences.</p></div><div class="codeblock reveal"><div class="cb-head"><span class="fname">jev-router/hooks/jev.ts</span><span class="tag">criteria</span></div><pre><span class="kw">const</span> MODELS = {
-  <span class="an">haiku</span>:
-    <span class="str">'Small and clear: rename something, read or
-     search files, run a command, answer a
-     quick question.'</span>,
-  <span class="an">sonnet</span>:
-    <span class="str">'Everyday coding: build a feature, fix a bug
-     with a clear cause, write tests, review a
-     diff.'</span>,
-  <span class="an">opus</span>:
-    <span class="str">'Hard or open-ended: design a system,
-     refactor many files, chase a bug nobody
-     understands yet.'</span>,
-}</pre></div></div></section>
-<section class="slide" aria-label="Slide 19: The catch" data-notes="31:30 to 33:00.
+“Five. Lambda asks Jev what the lead wants.
 
-“Now, the catch. This one bites you in week two.
+“Six. The Strands agent writes the draft, and its two tools read the same CRM table. The model is a switch. Set MODEL_PROVIDER to bedrock and it runs on Nova, inside the account. Tonight it goes to Claude on the Anthropic API, because this account’s Bedrock quota is still zero.
 
-“When you switch the main session to a new model, you lose the prompt cache. The new model has to read the whole conversation again at full price. On a long session that can cost more than the cheaper model saves.
+“Seven. Lambda asks Jev if the draft promises anything.
 
-“Subagents don’t have that problem. They start with a fresh context anyway. So routing subagents is basically free. Routing the main thread is a trade.
+“Then the policy picks a lane. Eight a: Jev is sure and the draft is clean, so SES sends it. It goes to the SES mailbox simulator, with a blind copy to the AE.
 
-“That’s why the mod has a minimum confidence setting. Default 0.7. Only switch when Jev is fairly sure. Claude Code even tells hooks the estimated cost of the cache write before a model switch, so a smarter version could include that in the decision.”"><span class="eyebrow reveal">The catch</span><h2 class="reveal">Switching models throws away the cache</h2>
-<div class="grid cols-2 reveal"><div class="card"><span class="k danger">Main thread</span><h3>A trade</h3><p>The new model re-reads the whole conversation. On a long session, that can cost more than it saves.</p></div><div class="card"><span class="k ok">Subagents</span><h3>Free</h3><p>They start fresh anyway. Route every one.</p></div></div>
-<p class="aside reveal">So the mod only switches the main thread when Jev is at least 70% sure.</p></section>
-<section class="slide statement" aria-label="Slide 20: Demo two" data-notes="33:00 to 38:00. Demo 2, about five minutes.
+“Eight b: not sure. Step Functions pauses on a task token, and SES emails the AE a link.
 
-Setup: start Claude Code with the mod loaded and TYPESAFE_API_KEY set. Status line shows the pick after each prompt: jev → haiku · 91% · 140ms. Start on Sonnet. Use a small throwaway repo (the demo repo itself is fine).
+“Nine. The AE taps the link. That calls a second Lambda through its function URL. It finds the token in the runs table and calls SendTaskSuccess. If the AE approved, the flow wakes up and sends.
 
-1. Type: “rename the tickets export to supportTickets everywhere”. Expect haiku. Point at the status line and the toast. (1 min)
-2. Type: “add a 5-route.ts that writes the routed tickets to a CSV file”. Expect sonnet. (1 min)
-3. Type: “design how we would add multi-language support to the triage, don’t write code yet”. Expect opus. (1 min)
-4. Type: “use two subagents: one to list every file, one to review 4-route.ts for bugs”. Watch the two toasts: different models for the two subagents. (2 min)
+“And the dotted line. Every step writes a receipt to the runs table. That’s what make reroute reads later, so moving the line costs zero model calls.”"><span class="eyebrow reveal">Architecture</span><h2 class="reveal">How a booth lead flows through AWS</h2>
+<figure class="awsarch reveal"><svg class="aa" viewBox="0 0 1200 540" role="img" aria-label="AWS architecture of the booth lead agent. 1, make run on the presenter laptop starts a Step Functions execution per lead. 2, Step Functions invokes the AppFunction Lambda for each step. 3, Lambda reads the contact and the do-not-contact flag from the DynamoDB CRM table. 4, Lambda reads the Jev key and the Anthropic key from Parameter Store. 5, Lambda asks TypeSafe Jev what the lead wants. 6, a Strands agent writes the draft with Claude on the Anthropic API by default, or Amazon Bedrock Nova when MODEL_PROVIDER is bedrock. Its tools read the CRM table. 7, Lambda asks Jev if the draft promises anything. 8a, if sure, Amazon SES sends the follow-up to the SES mailbox simulator with a blind copy to the AE. 8b, if not sure, Step Functions waits on a task token and SES emails the AE an approval link. 9, the AE clicks the link, the ApproveFunction URL reads the token from the runs table and calls SendTaskSuccess, and the flow resumes at 8a. Every step writes a receipt to the DynamoDB runs table, which make reroute reads."><title>Booth lead architecture on AWS</title><defs><marker id="arch-aws-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="aa-head" d="M0 1L9 5L0 9z"/></marker><marker id="arch-aws-arrow-dim" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path class="aa-head aa-dim" d="M0 1L9 5L0 9z"/></marker></defs><rect class="aa-zone" x="8" y="146" width="152" height="208" rx="10"/><rect class="aa-cloud" x="178" y="8" width="726" height="524" rx="12"/><rect class="aa-region" x="194" y="44" width="694" height="472" rx="10"/><rect class="aa-zone" x="922" y="8" width="270" height="292" rx="10"/><rect class="aa-zone" x="922" y="314" width="270" height="218" rx="10"/><path class="aa-gl aa-thin" d="M189 31h14a4 4 0 0 0 0-8 6 6 0 0 0-11.5-1.5A4.5 4.5 0 0 0 189 31z"/><text class="aa-zk" x="212" y="31">AWS CLOUD</text><text class="aa-zk" x="210" y="66">REGION <tspan class="aa-zv">us-east-1</tspan></text><text class="aa-zk" x="938" y="30">THIRD-PARTY APIS</text><text class="aa-zk" x="938" y="342">INBOXES</text><g class="aa-gl" transform="translate(16 152)"><rect x="6" y="6" width="30" height="20" rx="2"/><path d="M1 31h40"/></g><text class="aa-zk" x="20" y="210">PRESENTER LAPTOP</text><text class="aa-cmd" x="20" y="248">make run</text><text class="aa-al" x="20" y="262">starts one run per lead</text><text class="aa-cmd" x="20" y="290">make approve</text><text class="aa-al" x="20" y="304">backup for step 9</text><text class="aa-cmd" x="20" y="328">make reroute</text><text class="aa-al" x="20" y="342">reads RunsTable</text><path class="aa-ar" d="M160 244 L251 244" marker-end="url(#arch-aws-arrow)"/><path class="aa-ar" d="M299 256 L476 256" marker-end="url(#arch-aws-arrow)"/><path class="aa-ar" d="M500 226 L500 161" marker-end="url(#arch-aws-arrow)"/><path class="aa-ar" d="M476 234 L410 234 L410 100 L299 100" marker-end="url(#arch-aws-arrow)"/><path class="aa-ar" d="M524 232 L630 232 L630 70 L938 70" marker-end="url(#arch-aws-arrow)"/><path class="aa-ar" d="M524 250 L938 250" marker-end="url(#arch-aws-arrow)"/><path class="aa-ar aa-opt" d="M820 243 L820 200" marker-end="url(#arch-aws-arrow)"/><path class="aa-ar" d="M524 268 L670 268 L670 380" marker-end="url(#arch-aws-arrow)"/><path class="aa-ar" d="M694 396 L938 396" marker-end="url(#arch-aws-arrow)"/><path class="aa-ar" d="M694 414 L860 414 L860 474 L938 474" marker-end="url(#arch-aws-arrow)"/><path class="aa-ar" d="M938 494 L390 494 L390 414 L299 414" marker-end="url(#arch-aws-arrow)"/><path class="aa-ar" d="M275 380 L275 309" marker-end="url(#arch-aws-arrow)"/><path class="aa-ar" d="M299 396 L476 396" marker-end="url(#arch-aws-arrow)"/><path class="aa-ar aa-rec" d="M500 308 L500 380" marker-end="url(#arch-aws-arrow-dim)"/><path class="aa-jn" d="M820 243l7 7-7 7-7-7z"/><g transform="translate(251 76)"><rect width="48" height="48" rx="10" fill="#E7157B"/><g fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="17" cy="24" r="5.5"/><path d="M22.5 24H37M32 24v5M36.5 24v4"/></g></g><text class="aa-sn" x="275" y="140">PARAMETER STORE</text><text class="aa-rs" x="275" y="153">Jev key, Anthropic key</text><g transform="translate(476 76)"><rect width="48" height="48" rx="10" fill="#4053D6"/><g fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="14" rx="10" ry="4"/><path d="M14 14v20c0 2.2 4.5 4 10 4s10-1.8 10-4V14M14 24c0 2.2 4.5 4 10 4s10-1.8 10-4"/></g></g><text class="aa-sn" x="500" y="140">DYNAMODB</text><text class="aa-rs" x="500" y="153">CrmTable</text><g transform="translate(251 226)"><rect width="48" height="48" rx="10" fill="#E7157B"/><g fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="19" y="9" width="10" height="8" rx="2"/><path d="M24 17v6M14 23h20M14 23v8M34 23v8"/><rect x="9" y="31" width="10" height="8" rx="2"/><rect x="29" y="31" width="10" height="8" rx="2"/></g></g><text class="aa-sn" x="275" y="290">STEP FUNCTIONS</text><text class="aa-rs" x="275" y="303">OutreachStateMachine</text><g transform="translate(476 226)"><rect width="48" height="48" rx="10" fill="#ED7100"/><path d="M15 13h6l12 23h4M25 21 16 36" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></g><text class="aa-sn" x="500" y="290">AWS LAMBDA</text><text class="aa-rs" x="500" y="303">AppFunction</text><g transform="translate(251 380)"><rect width="48" height="48" rx="10" fill="#ED7100"/><path d="M15 13h6l12 23h4M25 21 16 36" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></g><text class="aa-sn" x="275" y="444">AWS LAMBDA</text><text class="aa-rs" x="275" y="457">ApproveFunction + URL</text><g transform="translate(476 380)"><rect width="48" height="48" rx="10" fill="#4053D6"/><g fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="24" cy="14" rx="10" ry="4"/><path d="M14 14v20c0 2.2 4.5 4 10 4s10-1.8 10-4V14M14 24c0 2.2 4.5 4 10 4s10-1.8 10-4"/></g></g><text class="aa-sn" x="500" y="444">DYNAMODB</text><text class="aa-rs" x="500" y="457">RunsTable</text><g transform="translate(646 380)"><rect width="48" height="48" rx="10" fill="#DD344C"/><g fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="15" width="26" height="19" rx="2.5"/><path d="M12 17l12 9 12-9"/></g></g><text class="aa-sn" x="670" y="444">AMAZON SES</text><text class="aa-rs" x="670" y="457">sends as the AE</text><g transform="translate(796 116)"><rect width="48" height="48" rx="10" fill="#01A88D"/><path d="M24 10l3.2 10.8L38 24l-10.8 3.2L24 38l-3.2-10.8L10 24l10.8-3.2z" fill="#fff"/><path d="M36 8l1 3 3 1-3 1-1 3-1-3-3-1 3-1z" fill="#fff"/></g><text class="aa-sn" x="820" y="180">AMAZON BEDROCK</text><text class="aa-rs" x="820" y="193">Nova Lite</text><g transform="translate(938 46)"><rect class="aa-nt" width="48" height="48" rx="10"/><g class="aa-gl"><circle cx="12" cy="24" r="3"/><path d="M15 24h6l8-8h7M21 24l8 8h7"/></g></g><text class="aa-sn aa-l" x="996" y="67">TYPESAFE JEV</text><text class="aa-rs aa-l" x="996" y="81">api.typesafe.ai</text><g transform="translate(938 226)"><rect class="aa-nt" width="48" height="48" rx="10"/><g class="aa-gl"><path d="M11 13h26v17H21l-6 5v-5h-4z"/><path d="M16 19h16M16 24h10"/></g></g><text class="aa-sn aa-l" x="996" y="247">ANTHROPIC API</text><text class="aa-rs aa-l" x="996" y="261">Claude, the default</text><g transform="translate(938 372)"><rect class="aa-nt" width="48" height="48" rx="10"/><g class="aa-gl"><path d="M11 27l4-11h18l4 11v8H11z"/><path d="M11 27h8l2 3h6l2-3h8"/></g></g><text class="aa-sn aa-l" x="996" y="393">CUSTOMER</text><text class="aa-rs aa-l" x="996" y="407">SES mailbox simulator</text><g transform="translate(938 456)"><rect class="aa-nt" width="48" height="48" rx="10"/><g class="aa-gl"><circle cx="24" cy="18" r="5.5"/><path d="M13 36c0-6 5-9.5 11-9.5S35 30 35 36"/></g></g><text class="aa-sn aa-l" x="996" y="477">AE INBOX</text><text class="aa-rs aa-l" x="996" y="491">BCC copies, approvals</text><rect class="aa-pill" x="208" y="194" width="134" height="21" rx="10.5"/><g class="aa-badge"><circle cx="219" cy="204.5" r="10"/><text class="aa-sm" x="219" y="208.1">8b</text></g><text class="aa-rs aa-l" x="234" y="208">waitForTaskToken</text><text class="aa-al aa-mid" x="360" y="249">invoke per step</text><text class="aa-al" x="516" y="186">agent tools</text><text class="aa-al" x="516" y="210">do-not-contact</text><text class="aa-al" x="644" y="160">promises anything?</text><text class="aa-al" x="644" y="190">what do they want?</text><text class="aa-rs aa-end" x="810" y="225">MODEL_PROVIDER=bedrock</text><text class="aa-al" x="734" y="268">agent writes the draft</text><text class="aa-al" x="834" y="244">default</text><text class="aa-al" x="686" y="310">sure: send it</text><text class="aa-al" x="686" y="342">not sure: ask the AE</text><text class="aa-al" x="510" y="339">receipt every step</text><text class="aa-al" x="510" y="353">+ task token (8b)</text><text class="aa-al" x="786" y="389">follow-up</text><text class="aa-al aa-end" x="848" y="432">BCC + approval link</text><text class="aa-al" x="616" y="486">AE clicks the link (Function URL)</text><text class="aa-al" x="291" y="342">SendTaskSuccess</text><text class="aa-al" x="291" y="356">resumes at 8a</text><text class="aa-al aa-mid" x="388" y="390">reads token</text><g class="aa-badge"><circle cx="222" cy="244" r="10"/><text x="222" y="247.6">1</text></g><g class="aa-badge"><circle cx="440" cy="256" r="10"/><text x="440" y="259.6">2</text></g><g class="aa-badge"><circle cx="500" cy="206" r="10"/><text x="500" y="209.6">3</text></g><g class="aa-badge"><circle cx="410" cy="170" r="10"/><text x="410" y="173.6">4</text></g><g class="aa-badge"><circle cx="630" cy="186" r="10"/><text x="630" y="189.6">5</text></g><g class="aa-badge"><circle cx="720" cy="250" r="10"/><text x="720" y="253.6">6</text></g><g class="aa-badge"><circle cx="630" cy="156" r="10"/><text x="630" y="159.6">7</text></g><g class="aa-badge"><circle cx="670" cy="306" r="10"/><text class="aa-sm" x="670" y="309.6">8a</text></g><g class="aa-badge"><circle cx="770" cy="396" r="10"/><text class="aa-sm" x="770" y="399.6">8a</text></g><g class="aa-badge"><circle cx="670" cy="338" r="10"/><text class="aa-sm" x="670" y="341.6">8b</text></g><g class="aa-badge"><circle cx="860" cy="446" r="10"/><text class="aa-sm" x="860" y="449.6">8b</text></g><g class="aa-badge"><circle cx="600" cy="494" r="10"/><text x="600" y="497.6">9</text></g><g class="aa-badge"><circle cx="275" cy="346" r="10"/><text x="275" y="349.6">9</text></g><g class="aa-badge"><circle cx="500" cy="182" r="10"/><text x="500" y="185.6">6</text></g></svg><figcaption class="chart-legend"><span class="item"><svg width="67" height="11" viewBox="0 0 67 11" aria-hidden="true"><rect x="0" y="0" width="11" height="11" rx="2.5" fill="#E7157B"/><rect x="14" y="0" width="11" height="11" rx="2.5" fill="#ED7100"/><rect x="28" y="0" width="11" height="11" rx="2.5" fill="#4053D6"/><rect x="42" y="0" width="11" height="11" rx="2.5" fill="#DD344C"/><rect x="56" y="0" width="11" height="11" rx="2.5" fill="#01A88D"/></svg>AWS service, colored by category</span><span class="item"><svg width="34" height="10" viewBox="0 0 34 10" aria-hidden="true"><path class="aa-ar" d="M1 5h31" marker-end="url(#arch-aws-arrow)"/></svg>Request path</span><span class="item"><svg width="34" height="10" viewBox="0 0 34 10" aria-hidden="true"><path class="aa-ar aa-rec" d="M1 5h31" marker-end="url(#arch-aws-arrow-dim)"/></svg>Receipt write</span><span class="item"><svg width="34" height="10" viewBox="0 0 34 10" aria-hidden="true"><path class="aa-ar aa-opt" d="M1 5h31" marker-end="url(#arch-aws-arrow)"/></svg>Optional path</span><span class="item"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><g class="aa-badge"><circle cx="10" cy="10" r="9.5"/><text x="10" y="13.6">1</text></g></svg>Run order</span></figcaption></figure></section>
+<section class="slide" aria-label="Slide 16: The AWS pieces" data-notes="21:00 to 23:00.
 
-Planned failure: if Jev picks something you disagree with, don’t hide it. Ask the room which model they would have picked. Then open jev.ts and point at the sentence that caused it. That’s the lesson: the routing logic is readable.
+“Six AWS pieces, and each one has one job.
 
-If the API is down: the mod does nothing, by design. Say so, and show the recorded run instead."><div class="reveal"><span class="eyebrow">Live</span></div><h1 class="reveal">Demo 2: <span class="accent">jev-router</span></h1><p class="sub reveal">Three prompts, two subagents, no /model.</p></section>
-<section class="slide" aria-label="Slide 21: What you just saw" data-notes="38:00 to 39:00.
+“Step Functions runs the steps in order. It’s also how a person gets into the loop. The task that waits for the AE uses waitForTaskToken. The workflow hands out a token, and nothing moves until someone sends it back. And the console draws every lead’s path, which is the best debugging view you’ll get for an agent.
 
-“Three prompts, and I never typed /model. The small one went to Haiku, the big one to Opus. The subagents each got their own model.
+“Lambda runs every step. One function. The thresholds live in its code.
 
-“And all of the intelligence in the router is one question to a decision model. The rest is plumbing.
+“The agent uses Strands. Strands is AWS’s open-source agent SDK. You give it a model, a system prompt, and plain Python functions marked as tools. It runs the loop. Ours has two tools: look up the account, and read its recent activity. The model is one setting. On Bedrock, it runs in your own account and Lambda signs in with its IAM role. Tonight it’s Claude through the Anthropic API, and here’s why. My new AWS account started with every Bedrock quota at zero, and the first call failed with ‘Too many tokens per day’. That’s common on new accounts, and lifting it takes a support case. So the demo keeps Bedrock as a one-line switch and uses the Anthropic API until then. If you try this on a fresh account, check your Bedrock quotas first.
 
-“It’s on GitHub, linked at the end. Take it, change the three sentences, make it yours.”
+“DynamoDB holds a fake CRM and a receipt for every run. SES sends the email. In sandbox mode it can only send to addresses you verified, which is exactly what you want in a demo. Parameter Store holds the Jev key and the Anthropic key.
 
-Adjust to what actually happened on stage."><span class="eyebrow reveal">Replay</span><h2 class="reveal">What you just saw</h2>
-<ul class="clean reveal big-list"><li>Three prompts. Zero <code>/model</code> commands.</li><li>Each subagent got its own model.</li><li>All the routing intelligence is one question. The rest is plumbing.</li></ul></section>
+“It deploys with one SAM template. The repo is linked at the end.”"><span class="eyebrow reveal">The stack</span><h2 class="reveal">Each AWS piece has one job</h2>
+<div class="grid cols-3 reveal"><div class="card"><span class="k">Step Functions</span><p>Runs the steps in order and waits for the AE. The console shows each lead’s path.</p></div><div class="card"><span class="k">Lambda</span><p>One function runs every step. The thresholds live here, in code.</p></div><div class="card"><span class="k">Strands + a model</span><p>The agent loop and two tools. Bedrock or the Anthropic API, picked by one setting.</p></div><div class="card"><span class="k">DynamoDB</span><p>A fake CRM, and a receipt for every run.</p></div><div class="card"><span class="k">SES</span><p>Sends the email. In sandbox mode, only to your verified inbox.</p></div><div class="card"><span class="k">Parameter Store</span><p>Holds the Jev and Anthropic API keys as SecureStrings.</p></div></div>
+<p class="aside reveal">One SAM template deploys all of it.</p></section>
+<section class="slide" aria-label="Slide 17: Decide before, check after" data-notes="23:00 to 25:00.
+
+“If you remember one pattern from tonight, make it this one. Jev sits on both sides of the LLM.
+
+“Before: one choice question picks the path. If the note says ‘grabbed a sticker’, we stop there. The agent never runs, and we never pay for a draft nobody needed.
+
+“After: one yes-or-no question checks the draft. The common way to do this is to ask a second LLM to grade the first one. Here a decision model answers in a fraction of a second, with a probability your code can use.
+
+“And look at what is not on this slide. The do-not-contact list. That’s a rule. Rules are if-statements.”"><span class="eyebrow reveal">The pattern</span><h2 class="reveal">Decide before you generate. Check after.</h2>
+<div class="grid cols-2 reveal"><div class="card"><span class="k">Choice · before</span><h3>What do they want?</h3><p>Meeting, pricing, info, or unclear. One cheap call picks the path before the agent runs.</p></div><div class="card"><span class="k">Yes or no · after</span><h3>Does the draft promise anything?</h3><p>A discount, a date, a feature. The fast model checks the slow model’s work.</p></div></div>
+<p class="aside reveal">The do-not-contact check never reaches Jev. It’s a rule, so it’s an <code>if</code>.</p></section>
+<section class="slide" aria-label="Slide 18: The whole policy" data-notes="25:00 to 26:30.
+
+“And this is where the line lives. One function, in Lambda, in plain Python.
+
+“Look at the first check. Jev gives a probability for every option, not only the winner. If ‘unclear’ has a real chance, thirty percent or more, we skip. That’s the sticker lead. But a lead split between pricing and a meeting is a real lead. Jev isn’t sure which, so it goes to the AE instead of being dropped. My first version skipped anything under fifty percent and dropped exactly that lead. No draft yet: write one. Less sure than our line, or the draft probably promises something: ask the AE. Otherwise: send.
+
+“Step Functions branches on the label this function returns. There are no numbers in the state machine. So when you want to move the line, you change one constant, and you can unit test it.
+
+“Hold on to sure_enough. You’re going to change it in a few minutes.”"><div class="split"><div><span class="eyebrow reveal">Code owns the line</span><h2 class="reveal">The whole policy is one function</h2><p class="aside reveal">Step Functions branches on the label. No numbers live in the state machine.</p></div><div class="codeblock reveal"><div class="cb-head"><span class="fname">demo/src/policy.py</span><span class="tag">policy</span></div><pre><span class="an">SURE_ENOUGH</span> = <span class="str">0.8</span>
+LIKELY_NOTHING = <span class="str">0.3</span>
+LIKELY_PROMISE = <span class="str">0.5</span>
+
+<span class="kw">def</span> route(receipt, sure_enough=SURE_ENOUGH):
+    intent = receipt[<span class="str">'intent'</span>]
+    unclear = intent[<span class="str">'probabilities'</span>][<span class="str">'unclear'</span>]
+    <span class="kw">if</span> intent[<span class="str">'choice'</span>] == <span class="str">'unclear'</span> \
+            <span class="kw">or</span> unclear &gt;= LIKELY_NOTHING:
+        <span class="kw">return</span> <span class="str">'skip'</span>
+    <span class="kw">if</span> <span class="str">'promises'</span> <span class="kw">not in</span> receipt:
+        <span class="kw">return</span> <span class="str">'draft'</span>
+    <span class="kw">if</span> intent[<span class="str">'confidence'</span>] &lt; <span class="an">sure_enough</span> \
+            <span class="kw">or</span> receipt[<span class="str">'promises'</span>] &gt;= LIKELY_PROMISE:
+        <span class="kw">return</span> <span class="str">'approve'</span>
+    <span class="kw">return</span> <span class="str">'send'</span></pre></div></div></section>
+<section class="slide statement" aria-label="Slide 19: Demo" data-notes="26:30 to 36:00. Demo, about nine minutes.
+
+Setup before the talk: cd demo. Stack deployed, make setup done, SES address verified. Run make run once at the venue and check that the five paths match the README. Then run make local once so .cache/ is fresh. Open three things: the Step Functions console on the state machine, a terminal with make logs, and your inbox on your phone.
+
+1. Open seed/leads.json. Read L-1, L-2 and L-3 aloud. (1 min)
+2. make run. Five executions start. Open L-4 first: it stops at the do-not-contact check. Say: “A rule. Jev was never asked.” (1 min)
+3. Open L-1. Walk the graph to Sent. Click the last state and show the receipt: intent, confidence, promises, and the ms per step. Point at Jev’s ms next to the agent’s ms. Show the email on your phone. (2 min)
+4. Open L-3. It stops at No email. Jev gave ‘unclear’ a real chance, about 43 percent. (30 sec)
+5. Open L-2. It waits at Wait for the AE. Open the approval email on your phone, read Jev’s two numbers aloud, and tap Approve. Refresh the graph: it moves to Sent. If the link is slow: make approve LEAD=L-2. (2 min)
+6. Open src/policy.py, then go to the next slide.
+
+Planned failure: if L-2 goes straight to Sent, say: “Jev was surer than I expected. Fine. Watch what happens when you move the line.” Then use the reroute slide. If the email link fails, approve from the terminal and say so. It’s the same SendTaskSuccess call.
+
+Jev’s confidence moves a little between runs. If the Wi-Fi dies: make local replays from .cache/ and prints ‘offline, replaying’. Use make reroute LOCAL=1 for the next slide."><div class="reveal"><span class="eyebrow">Live</span></div><h1 class="reveal">Demo: five booth leads</h1><p class="sub reveal">One state machine. Two Jev calls. One AE on a phone.</p></section>
+<section class="slide" aria-label="Slide 20: What you just saw" data-notes="36:00 to 37:30.
+
+“Let’s replay that. Five leads, four different endings.
+
+“The agent ran three times. Jev ran seven times. A person looked once. That ratio is the point. The expensive model only runs when it has a reason to, and the person only looks when the numbers say so.”
+
+Adjust the table and the counts to what happened on stage."><span class="eyebrow reveal">Replay</span><h2 class="reveal">What you just saw</h2>
+<div class="table-wrap reveal"><table><thead><tr><th scope="col">Lead</th><th scope="col">The note</th><th scope="col">Path</th></tr></thead><tbody><tr><td>L-1</td><td>Pricing before a budget review</td><td class="ok-ink">Sent</td></tr><tr><td>L-2</td><td>Beat a vendor’s price, and when is SSO?</td><td>Waited for the AE</td></tr><tr><td>L-3</td><td>Grabbed a sticker</td><td>No email</td></tr><tr><td>L-4</td><td>Wants a call, but opted out</td><td>Blocked by a rule</td></tr><tr><td>L-5</td><td>Call with a solutions engineer</td><td class="ok-ink">Sent</td></tr></tbody></table></div>
+<p class="aside reveal">The agent ran three times. Jev ran seven times. A person looked once.</p></section>
+<section class="slide" aria-label="Slide 21: Move the line" data-notes="37:30 to 39:00.
+
+“Your turn. Raising the line changes nothing tonight, because L-1 and L-5 came back a hundred percent sure. So let’s go the other way. Who trusts Jev more? Give me a number below point five.
+
+“Run make reroute with the number the room picked. Every receipt is in DynamoDB, so this makes no new calls to Jev or the model. It reruns the policy function and nothing else.
+
+“L-2 changes lanes. It goes out with no person looking. Is that OK for a lead who asked us to beat a competitor’s price? Same answers from Jev, different decision. The threshold is a product decision, not a model decision. And it’s one line of code.”
+
+These numbers are from the Nov 19 run in AWS. Jev’s numbers move a little between runs, so use the output from your own run."><div class="split"><div><span class="eyebrow reveal">Your turn</span><h2 class="reveal">Pick a new threshold. Nothing calls a model.</h2><p class="aside reveal">Every receipt is in DynamoDB. Rerouting reruns the policy function and nothing else.</p></div><div class="codeblock reveal"><div class="cb-head"><span class="fname">terminal</span><span class="tag">Nov 19 run</span></div><pre>$ make reroute T=0.45
+<span class="cm">Same Jev answers, no new model calls. Threshold 0.8 → 0.45</span>
+
+L-1  pricing  100%  promises  6%     send → send
+L-2  pricing   49%  promises 15%  approve → <span class="an">send</span>  ← changed
+L-3  info      48%                   skip → skip
+L-4  -                           blocked
+L-5  meeting  100%  promises 13%     send → send</pre></div></div></section>
 <section class="slide" aria-label="Slide 22: When not to use one" data-notes="39:00 to 40:30.
 
 “Now, when shouldn’t you use these? Three cases.
@@ -887,44 +975,46 @@ Adjust to what actually happened on stage."><span class="eyebrow reveal">Replay<
 
 “If the step needs to think in several hops, look something up, then think again, that’s System 2 work. Keep it on the LLM.
 
-“And if it’s a hard rule, write the rule. ‘Refunds over five hundred dollars need a manager’ is an if-statement. Don’t ask any model, fast or slow, to guess your policy.
+“And if it’s a hard rule, write the rule. ‘Don’t email people who opted out’ is an if-statement. You saw it in the demo. Don’t ask any model, fast or slow, to guess your policy.
 
 “One more time, because people get this wrong: a fixed list guarantees the shape. Not the truth.”"><span class="eyebrow reveal">Know the limits</span><h2 class="reveal">When not to use a decision model</h2>
-<div class="grid cols-3 reveal"><div class="card"><span class="k">You need words</span><p>Replies, code, summaries. Use the LLM.</p></div><div class="card"><span class="k">You need several hops</span><p>Look up, think, look up again. That’s System 2.</p></div><div class="card"><span class="k danger">It’s a hard rule</span><p>“Refunds over $500 need a manager” is an <code>if</code>. Write it.</p></div></div>
+<div class="grid cols-3 reveal"><div class="card"><span class="k">You need words</span><p>Replies, code, summaries. Use the LLM.</p></div><div class="card"><span class="k">You need several hops</span><p>Look up, think, look up again. That’s System 2.</p></div><div class="card"><span class="k danger">It’s a hard rule</span><p>“Don’t email people who opted out” is an <code>if</code>. Write it.</p></div></div>
 <p class="aside reveal">A fixed list guarantees the shape, not the truth.</p></section>
 <section class="slide" aria-label="Slide 23: Check the calibration yourself" data-notes="40:30 to 42:30.
 
 “Last practical bit. Every vendor says their model is calibrated. Check it on your own data. It takes an afternoon.
 
-“Take a hundred tickets you’ve already labeled. Run them through. Put the answers in buckets by confidence. Then count.
+“Take a hundred examples you’ve already labeled. Run them through. Put the answers in buckets by confidence. Then count.
 
 “Here’s what good looks like. In the ninety percent bucket, about ninety percent are right. In the sixty percent bucket, about sixty. If the ninety bucket is only seventy percent right, the model is overconfident on your data, and your threshold needs to move up.
 
-“That table tells you where to draw your line.”
+“That table tells you where to draw your line. If you deploy the demo stack, every receipt is already in the runs table in DynamoDB. Label them, and you have your first bucket.”
 
 Illustrative numbers only. They are not from a real run."><span class="eyebrow reveal">Trust, but count</span><h2 class="reveal">Check the calibration on your own data</h2>
 <div class="table-wrap reveal"><table><thead><tr><th scope="col">Model said</th><th scope="col">Answers in bucket</th><th scope="col">Actually right</th><th scope="col">Verdict</th></tr></thead><tbody><tr><td>90 to 100%</td><td>50</td><td>46 (92%)</td><td class="ok-ink">Calibrated</td></tr><tr><td>70 to 90%</td><td>30</td><td>24 (80%)</td><td class="ok-ink">Calibrated</td></tr><tr><td>Below 70%</td><td>20</td><td>9 (45%)</td><td>Send to a person</td></tr></tbody></table></div>
-<p class="aside reveal">Example numbers. A hundred labeled tickets and an afternoon gets you yours.</p></section>
+<p class="aside reveal">Example numbers. A hundred labeled examples and an afternoon gets you yours.</p></section>
 <section class="slide" aria-label="Slide 24: Three things to take home" data-notes="42:30 to 44:00.
 
 “Three things to take home.
 
-“One. Color your agent’s steps. Count the decisions. I bet most of them are. Put your steps in a text file, one per line, and run npm run color from the demo repo. Jev colors them for you.
+“One. Color your agent’s steps. Count the decisions. I bet most of them are. Put your steps in a text file, one per line, and run make color from the demo repo. Jev colors them for you.
 
 “Two. Move those to a decision model, and let code own the threshold.
 
 “Three. Measure calibration on your own data before you trust anyone’s, including mine.
 
 “And one prediction, which is just my bet. In a year, agent harnesses will ship with a small decision model next to the big one, the same way they ship with a cheap model today. You won’t pick it. It’ll just be there.”"><span class="eyebrow reveal">Take home</span><h2 class="reveal">Three things</h2>
-<ol class="steps reveal big-list"><li>Color your agent’s steps with <code>npm run color</code>. Count the decisions.</li><li>Move them to a decision model. Let code own the threshold.</li><li>Measure calibration on your data before you trust anyone’s.</li></ol>
+<ol class="steps reveal big-list"><li>Color your agent’s steps with <code>make color</code>. Count the decisions.</li><li>Move them to a decision model. Let code own the threshold.</li><li>Measure calibration on your data before you trust anyone’s.</li></ol>
 <p class="aside reveal">My bet: in a year, agent harnesses ship a decision model next to the LLM by default.</p></section>
 <section class="slide statement thank-you" aria-label="Slide 25: Thank you" data-notes="44:00 to 45:00, then questions until 8:00 PM.
 
-“The best part of a meetup like this is the hallway after. So come find me. I want to hear what you’d route.
+“The best part of a meetup like this is the hallway after. So come find me. I want to hear which steps in your agent are really decisions.
 
 “Thank you.”
 
-Leave this slide up during questions."><span class="eyebrow reveal">Questions?</span><h1 class="reveal">Thank you.</h1><div class="qr-grid reveal"><a class="qr-card" href="https://github.com/bharadwaj-pendyala/beyond-llms-demo" target="_blank" rel="noopener noreferrer" aria-label="Open the beyond-llms-demo GitHub repository"><img src="./demo-qr.svg" alt="QR code for the beyond-llms-demo GitHub repository"><span><span class="k">Demo code + mod</span><h3>beyond-llms-demo</h3><p>Triage, jev-router, and npm run color</p></span></a><a class="qr-card" href="https://bharad.dev" target="_blank" rel="noopener noreferrer" aria-label="Open Bharadwaj Pendyala's portfolio"><img src="./portfolio-qr.svg" alt="QR code for bharad.dev"><span><span class="k">Deck and talks</span><h3>bharad.dev</h3><p>This deck and the harness engineering talk.</p></span></a></div></section></main>
+Leave this slide up during questions.
+
+TODO: point the QR code and link at the AWS demo repo once it is public."><span class="eyebrow reveal">Questions?</span><h1 class="reveal">Thank you.</h1><div class="qr-grid reveal"><a class="qr-card" href="https://github.com/bharadwaj-pendyala/beyond-llms-demo" target="_blank" rel="noopener noreferrer" aria-label="Open the beyond-llms-demo GitHub repository"><img src="./demo-qr.svg" alt="QR code for the beyond-llms-demo GitHub repository"><span><span class="k">Demo code</span><h3>beyond-llms-demo</h3><p>The outreach agent, the SAM stack, and make color</p></span></a><a class="qr-card" href="https://bharad.dev" target="_blank" rel="noopener noreferrer" aria-label="Open Bharadwaj Pendyala's portfolio"><img src="./portfolio-qr.svg" alt="QR code for bharad.dev"><span><span class="k">Deck and talks</span><h3>bharad.dev</h3><p>This deck and the harness engineering talk.</p></span></a></div></section></main>
 <div class="footer"><span class="brand"><span class="sq"></span>Beyond LLMs</span><span class="count">01 / 25</span></div>
 <div class="hint">Arrow keys to navigate / <kbd>N</kbd> notes / <kbd>F</kbd> fullscreen</div>
 <aside class="notes"><div class="nh">Speaker notes</div><div class="nb"></div></aside>

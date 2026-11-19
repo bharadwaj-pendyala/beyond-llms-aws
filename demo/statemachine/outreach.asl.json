@@ -1,0 +1,90 @@
+{
+  "Comment": "Booth visit follow-up. Jev decides, the agent writes, code owns the threshold.",
+  "StartAt": "Check do-not-contact",
+  "States": {
+    "Check do-not-contact": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${AppFunctionArn}",
+        "Payload": { "step": "check_rules", "state.$": "$" }
+      },
+      "OutputPath": "$.Payload",
+      "Next": "Allowed?"
+    },
+    "Allowed?": {
+      "Type": "Choice",
+      "Choices": [{ "Variable": "$.receipt.route", "StringEquals": "blocked", "Next": "Blocked by rule" }],
+      "Default": "Jev: what do they want?"
+    },
+    "Jev: what do they want?": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${AppFunctionArn}",
+        "Payload": { "step": "decide_intent", "state.$": "$" }
+      },
+      "OutputPath": "$.Payload",
+      "Next": "Worth drafting?"
+    },
+    "Worth drafting?": {
+      "Type": "Choice",
+      "Choices": [{ "Variable": "$.receipt.route", "StringEquals": "skip", "Next": "No email" }],
+      "Default": "Agent: write the draft"
+    },
+    "Agent: write the draft": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${AppFunctionArn}",
+        "Payload": { "step": "write_draft", "state.$": "$" }
+      },
+      "OutputPath": "$.Payload",
+      "Next": "Jev: does it promise anything?"
+    },
+    "Jev: does it promise anything?": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${AppFunctionArn}",
+        "Payload": { "step": "check_draft", "state.$": "$" }
+      },
+      "OutputPath": "$.Payload",
+      "Next": "Send or ask?"
+    },
+    "Send or ask?": {
+      "Type": "Choice",
+      "Choices": [{ "Variable": "$.receipt.route", "StringEquals": "send", "Next": "Send email" }],
+      "Default": "Wait for the AE"
+    },
+    "Wait for the AE": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
+      "Parameters": {
+        "FunctionName": "${AppFunctionArn}",
+        "Payload": { "step": "request_approval", "state.$": "$", "token.$": "$$.Task.Token" }
+      },
+      "TimeoutSeconds": 3600,
+      "Next": "Approved?"
+    },
+    "Approved?": {
+      "Type": "Choice",
+      "Choices": [{ "Variable": "$.receipt.decision", "StringEquals": "approve", "Next": "Send email" }],
+      "Default": "Rejected by the AE"
+    },
+    "Send email": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "${AppFunctionArn}",
+        "Payload": { "step": "send", "state.$": "$" }
+      },
+      "OutputPath": "$.Payload",
+      "Next": "Sent"
+    },
+    "Sent": { "Type": "Succeed" },
+    "Blocked by rule": { "Type": "Succeed" },
+    "No email": { "Type": "Succeed" },
+    "Rejected by the AE": { "Type": "Succeed" }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "accounts": [
+    {
+      "id": "lonestar-clinics",
+      "company": "Lonestar Clinics",
+      "industry": "Healthcare",
+      "employees": 1200,
+      "plan": "Starter",
+      "ae": { "name": "Jordan Avery", "email": "jordan.avery@demo.example" },
+      "contacts": [
+        { "email": "dana@lonestar.example", "name": "Dana Ruiz", "doNotContact": false }
+      ],
+      "activity": [
+        { "date": "2026-09-12", "type": "email", "summary": "Sent the healthcare claims case study." },
+        { "date": "2026-10-03", "type": "meeting", "summary": "Intro call. They run about 40 Lambda functions for claims intake and want fewer manual reviews." }
+      ]
+    },
+    {
+      "id": "pecan-logistics",
+      "company": "Pecan Logistics",
+      "industry": "Logistics",
+      "employees": 300,
+      "plan": "Team",
+      "ae": { "name": "Jordan Avery", "email": "jordan.avery@demo.example" },
+      "contacts": [
+        { "email": "raj@pecan.example", "name": "Raj Mehta", "doNotContact": false }
+      ],
+      "activity": [
+        { "date": "2026-08-21", "type": "support", "summary": "Open ticket: asked when SSO will be available on the Team plan." },
+        { "date": "2026-10-15", "type": "email", "summary": "Renewal reminder sent. Renewal is in March." }
+      ]
+    },
+    {
+      "id": "trinity-robotics",
+      "company": "Trinity Robotics",
+      "industry": "Manufacturing",
+      "employees": 80,
+      "plan": "None",
+      "ae": { "name": "Priya Nair", "email": "priya.nair@demo.example" },
+      "contacts": [
+        { "email": "sam@trinity.example", "name": "Sam Okafor", "doNotContact": false }
+      ],
+      "activity": []
+    },
+    {
+      "id": "mesquite-media",
+      "company": "Mesquite Media",
+      "industry": "Media",
+      "employees": 45,
+      "plan": "Starter",
+      "ae": { "name": "Priya Nair", "email": "priya.nair@demo.example" },
+      "contacts": [
+        { "email": "lee@mesquite.example", "name": "Lee Tran", "doNotContact": true }
+      ],
+      "activity": [
+        { "date": "2026-07-30", "type": "email", "summary": "Asked to be removed from sales email." }
+      ]
+    },
+    {
+      "id": "bluebonnet-bank",
+      "company": "Bluebonnet Bank",
+      "industry": "Financial services",
+      "employees": 2500,
+      "plan": "Enterprise",
+      "ae": { "name": "Jordan Avery", "email": "jordan.avery@demo.example" },
+      "contacts": [
+        { "email": "maria@bluebonnet.example", "name": "Maria Chen", "doNotContact": false }
+      ],
+      "activity": [
+        { "date": "2026-10-28", "type": "meeting", "summary": "Quarterly review. Their platform team is moving batch jobs to Step Functions." }
+      ]
+    }
+  ]
+}
